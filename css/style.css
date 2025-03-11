@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&display=swap');
+
+:root {
+    --fonte-principal: 'Playwrite HU', sans-serif;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -32,7 +38,8 @@ header h1{
     padding: 10px 0px 20px;
     color: darkorchid;
     text-shadow: 2px 2px 2px rgb(0, 0, 0);
-    font-size: 3rem;
+    font-size: 4rem;
+    font-family: var(--fonte-principal);
 }
 
 header nav {
@@ -87,6 +94,7 @@ header div.cart-icon{
 section img {
     width: 300px;
     height: 300px;
+    border-radius: 10px 10px 0 0;
 }
 
 section.hero {
@@ -132,13 +140,16 @@ section.featured-products h2 {
 section.featured-products div.carousel, div.more-products {
     display: flex;
     justify-content: space-between; /* Espaço igual entre os itens */
-    gap: 20px  /* Espaço entre as imagens */
+    gap: 20px;  /* Espaço entre as imagens */
 }
 
 .product {
     flex: 1 1 calc(25% - 20px); /* Cada produto ocupará 25% do espaço da tela, ajustando para o gap */
     text-align: center;
     box-sizing: border-box;  /* Inclui padding e margin no cálculo da largura */
+    background-color: aliceblue;
+    border-radius: 12px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.550);
 }
 
 section.featured-products button {
@@ -152,25 +163,6 @@ div.more-products {
 
 div.hidden-featured {
     display: none
-}
-
-/* Animação de fade-in */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Classe para ativar a animação */
-.fade-in {
-    opacity: 1;
-    height: auto;
-    animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Ofertas Especiais */
@@ -196,6 +188,9 @@ section.special-offers div.offers, div.more-offers{
     flex: 1 1 calc(25% - 20px); /* Cada produto ocupará 25% do espaço da tela, ajustando para o gap */
     text-align: center;
     box-sizing: border-box;  /* Inclui padding e margin no cálculo da largura */
+    background-color: aliceblue;
+    border-radius: 12px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.550);
 }
 
 section.special-offers button {
@@ -223,6 +218,16 @@ div.hidden-offer {
     display: none;
 }
 
+/* BOTÕES DE "VER MAIS" E "APROVEITE AGORA" */
+#ofertas, #verMais {
+    margin-top: 30px;
+}
+
+/* DESCRIÇÃO DOS CARD */
+div.descrição-card {
+    padding: 8px 0px 8px 0px;
+}
+
 /* Rodapé */
 
 footer {
@@ -230,17 +235,26 @@ footer {
     background-color: rgb(129, 0, 60);
     width: 100%;
     justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
     color: black;
-    padding: 10px;
+    padding: 20px 0px 20px 10px;
+}
+
+footer div.social-media {
+    display: flex;
+    margin-left: 50px;
 }
 
 footer a {
+    display: flex;
     text-decoration: none;
     color: black;
-    background-color: aliceblue;
+    color: aliceblue;
+    padding: 5px;
 }
 
 footer p {
-    background-color: aliceblue;
+    color: aliceblue;
+    padding: 5px;
 }
