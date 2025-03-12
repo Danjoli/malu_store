@@ -247,9 +247,17 @@ footer {
     padding: 20px 0px 20px 10px;
 }
 
+footer div.footer-links {
+    justify-items: center;
+}
+
 footer div.social-media {
     display: flex;
     margin-left: 50px;
+}
+
+footer div.contact-info {
+    justify-items: center;
 }
 
 footer a {
