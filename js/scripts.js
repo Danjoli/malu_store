@@ -4,16 +4,49 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnOfertas = document.getElementById("ofertas");
     const gruposOfertas = document.querySelectorAll(".more-offers"); // Seleciona todos as ofertas
 
+    // Função para animar a entrada dos elementos
+    function animarEntrada(elementos) {
+        let delay = 0
+        elementos.forEach((grupo, index) => {
+            grupo.style.display = "flex"  // Torna o elemento visível
+            grupo.style.opacity = 0;    // Inicia a opacidade em 0
+            grupo.style.transform = "translateY(20px)"; // Inicia com o elemento deslocado
+
+            // Forncendo uma pequena transição para cada elemento
+            grupo.style.transition = `opacity 0.5s ease ${delay}s, transform 0.5 ease ${delay}s`;
+
+            setTimeout(() => {
+                grupo.style.opacity = 1;    // Aumeta a opacidade
+                grupo.style.transform = "translateY(0)"; // Retorna ao estado original
+            }, delay * 1500);  // Atraso baseado no índice do elemento
+            delay += 0.3; // Atraso progressivo para cada elemento
+        });
+    }
+
+    // Função para animar a saida dos elementos
+    function animarSaida(elementos) {
+        let delay = 0
+        elementos.forEach((grupo, index) => {
+            grupo.style.transition = `opacity 0.5s ease ${delay}s, transform 0.5 ease ${delay}s`;
+            grupo.style.opacity = 0;    // Torna a opacidade 0
+            grupo.style.transform = "translateY(-20px)"; // Desloca o elemento para cima
+            setTimeout(() => {
+                grupo.style.display = "none"  // Esconde o elemento após a animação
+                grupo.style.transform = "translateY(0)"; // Retorna ao estado original
+            }, delay * 1000);  // Esconde após a animação
+        });
+    }
+
     btnVerMais.addEventListener("click", function () {
         if (btnVerMais.textContent == "Ver mais") {
-            // Exibe todas as divisões de uma vez
-            gruposProdutos.forEach(grupo => grupo.classList.remove("hidden-featured"));
+            // Exibe todos os produtos com animação
+            animarEntrada(gruposProdutos);
 
             // Altera o texto do botão para "Voltar"
-            btnVerMais.textContent = "Voltar";
+            btnVerMais.textContent = "Voltar"; // Exibe todos os produtos com animação
         } else {
-            // Esconde novamente as divisões extras
-            gruposProdutos.forEach(grupo => grupo.classList.add("hidden-featured"));
+            // Esconde os produtos com animação
+            animarSaida(gruposProdutos);
 
             // Altera o texto do botão de volta para "Ver mais"
             btnVerMais.textContent = "Ver mais";
@@ -22,13 +55,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     btnOfertas.addEventListener("click", function () {
         if (btnOfertas.textContent == "Aproveite agora") {
-            // Exibe todas as divisões de uma vez
-            gruposOfertas.forEach(grupo => grupo.classList.remove("hidden-offer"));
+            // Exibe todas as ofertas com animação
+            animarEntrada(gruposOfertas)
 
             // Altera o texto do botão para "Voltar"
             btnOfertas.textContent = "Voltar";
         } else {
-            // Esconde novamente as divisões extras
+            // Esconde as ofertas com animação
+            animarSaida(gruposOfertas);
             gruposOfertas.forEach(grupo => grupo.classList.add("hidden-offer"));
 
             // Altera o texto do botão de volta para "Ver mais"
@@ -36,3 +70,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+
+
+
+
+
+
+

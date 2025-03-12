@@ -95,6 +95,12 @@ section img {
     width: 300px;
     height: 300px;
     border-radius: 10px 10px 0 0;
+    transition: 0.5s;
+}
+
+section img:hover {
+    width: 325px;
+    height: 325px;
 }
 
 section.hero {
@@ -156,13 +162,13 @@ section.featured-products button {
     margin-top: 10px;
 }
 
-/* Oculta os elementos inicialmente */
 div.more-products {
     margin-top: 50px;
 }
 
+/* Oculta os elementos inicialmente */
 div.hidden-featured {
-    display: none
+    display: none;
 }
 
 /* Ofertas Especiais */
