@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
             grupo.style.transition = `opacity 0.5s ease ${delay}s, transform 0.5 ease ${delay}s`;
             grupo.style.opacity = 0;    // Torna a opacidade 0
             grupo.style.transform = "translateY(-20px)"; // Desloca o elemento para cima
+            
             setTimeout(() => {
                 grupo.style.display = "none"  // Esconde o elemento após a animação
                 grupo.style.transform = "translateY(0)"; // Retorna ao estado original
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Controle do botão "Ver Mais"
     btnVerMais.addEventListener("click", function () {
         if (btnVerMais.textContent == "Ver mais") {
             // Exibe todos os produtos com animação
@@ -45,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Altera o texto do botão para "Voltar"
             btnVerMais.textContent = "Voltar"; // Exibe todos os produtos com animação
         } else {
-            // Esconde os produtos com animação
+            // Esconde os produtos
             animarSaida(gruposProdutos);
 
             // Altera o texto do botão de volta para "Ver mais"
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // Controle do botão "Aproveite agora"
     btnOfertas.addEventListener("click", function () {
         if (btnOfertas.textContent == "Aproveite agora") {
             // Exibe todas as ofertas com animação
@@ -61,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Altera o texto do botão para "Voltar"
             btnOfertas.textContent = "Voltar";
         } else {
-            // Esconde as ofertas com animação
+            // Esconde as ofertas 
             animarSaida(gruposOfertas);
             gruposOfertas.forEach(grupo => grupo.classList.add("hidden-offer"));
 
