@@ -60,23 +60,40 @@ document.addEventListener("DOMContentLoaded", function () {
             // Oculta os titulos se não houver produtos ou ofertas
             tituloDestaques.forEach(titulo => titulo.style.display = hasProducts ? "block" : "none");
             tituloOfertas.forEach(titulo => titulo.style.display = hasOffers ? "block" : "none");
+
+            // Modifica o margin-top de .more-products caso não haja produtos
+            if (!hasProducts) {
+                gruposProdutos.forEach(grupo => {
+                    grupo.style.marginTop = "0";
+                });
+            }
+
+            if (!hasOffers) {
+                gruposOfertas.forEach(grupo => {
+                    grupo.style.marginTop = "0";
+                });
+            }
+
         } else {
             if (btnVerMais) btnVerMais.style.display = "block";
             if (btnOfertas) btnOfertas.style.display = "block";
 
-            // Esconde os grupos de produtos e ofertas
             /*
             gruposProdutos.forEach(grupo => grupo.classList.add("hidden-featured"));
             gruposOfertas.forEach(grupo => grupo.classList.add("hidden-offer"));
             */
+
+            // Esconde os grupos de produtos e ofertas
             gruposProdutos.forEach((grupo, index) => {
                 grupo.style.display = "none"
-                grupo.style.opacity = 0; 
+                grupo.style.opacity = 0;
+                grupo.style.marginTop = "50px" // Restabelece o margin-top
             });
 
             gruposOfertas.forEach((grupo, index) => {
                 grupo.style.display = "none"
                 grupo.style.opacity = 0; 
+                grupo.style.marginTop = "50px" // Restabelece o margin-top
             });
 
             // Exibe os títulos novamente ao sair da pesquisa

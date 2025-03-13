@@ -100,8 +100,16 @@ header div.cart-icon{
 section img {
     width: 300px;
     height: 300px;
-    border-radius: 10px 10px 0 0;
-    transition: 0.5s;
+}
+
+div.cart-icon > img {
+    width: 40px;
+    transition: .5s;
+}
+
+div.cart-icon > img:hover {
+    width: 55px;
+    cursor: pointer;
 }
 
 section.hero {
@@ -141,7 +149,7 @@ section.featured-products {
 }
 
 section.featured-products h2 {
-    margin-top: 10px;
+    margin-top: 30px;
     margin-bottom: 10px;
 }
 
@@ -266,6 +274,12 @@ footer div.footer-links {
     justify-items: center;
 }
 
+footer div.footer-links > a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px; /* Ajuste a espessura */
+    font-weight: bolder;
+}
+
 footer div.social-media {
     display: flex;
     margin-left: 50px;
@@ -273,6 +287,12 @@ footer div.social-media {
 
 footer div.contact-info {
     justify-items: center;
+}
+
+footer div.contact-info > p:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px; /* Ajuste a espessura */
+    font-weight: bolder;
 }
 
 footer a {
