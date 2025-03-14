@@ -57,6 +57,13 @@ document.addEventListener("DOMContentLoaded", function () {
             tituloDestaques.forEach(titulo => titulo.style.display = hasProducts ? "block" : "none");
             tituloOfertas.forEach(titulo => titulo.style.display = hasOffers ? "block" : "none");
 
+            // Verifica se apenas ofertas estão sendo exibidas
+            if (!hasProducts & hasOffers) {
+                tituloOfertas.forEach(titulo => titulo.style.marginTop = "0px");
+            } else {
+                tituloOfertas.forEach(titulo => titulo.style.marginTop = "30px");
+            } 
+
         } else {
             if (btnVerMais) btnVerMais.style.display = "block";
             if (btnOfertas) btnOfertas.style.display = "block";
