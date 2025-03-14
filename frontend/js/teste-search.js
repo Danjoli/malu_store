@@ -9,6 +9,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const tituloDestaques = document.querySelectorAll(".titulo-destaques");
     const tituloOfertas = document.querySelectorAll(".titulo-ofertas");
 
+    function resetProducts() {
+        gruposProdutos.forEach((produto, index) => {
+            produto.style.display = index < 4 ? "block" : "none"; // Mostra apenas os 4 primeiros
+        });
+
+        gruposOfertas.forEach((produto, index) => {
+            produto.style.display = index < 4 ? "block" : "none"; // Mostra apenas os 4 primeiros
+        });
+    }
+
     searchInput.addEventListener("input", function () {
         const searchTerm = searchInput.value.toLowerCase().trim();   // Normaliza o termo de busca
         const isSearching = searchTerm.length > 0;           // Verifica se há texto digitado
@@ -32,8 +42,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Aplica a busca nos produtos e nas ofertas
-        const hasProducts = filterItems(gruposProdutos);
-        const hasOffers = filterItems(gruposOfertas);
+        if (isSearching) {
+            filterItems(gruposProdutos);
+            filterItems(gruposOfertas);
+        } else {
+            resetProducts(); // Volta para exibir apenas os 4 primeiros ao limpar a busca
+        }
 
         if (btnVerMais) btnVerMais.style.display = isSearching ? "none" : "block";
         if (btnOfertas) btnOfertas.style.display = isSearching ? "none" : "block";
