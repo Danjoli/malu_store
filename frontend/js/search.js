@@ -45,55 +45,31 @@ document.addEventListener("DOMContentLoaded", function () {
             // Garante que os produtos de produtos e ofertas apareçam
             gruposProdutos.forEach((grupo, index) => {
                 grupo.style.display = "flex"
-                grupo.style.opacity = 1; 
+                grupo.style.opacity = 1;
             });
 
             gruposOfertas.forEach((grupo, index) => {
                 grupo.style.display = "flex"
-                grupo.style.opacity = 1; 
+                grupo.style.opacity = 1;
             });
-            /*
-            gruposProdutos.forEach(grupo => grupo.classList.remove("hidden-featured"));
-            gruposOfertas.forEach(grupo => grupo.classList.remove("hidden-offer"));
-            */
 
             // Oculta os titulos se não houver produtos ou ofertas
             tituloDestaques.forEach(titulo => titulo.style.display = hasProducts ? "block" : "none");
             tituloOfertas.forEach(titulo => titulo.style.display = hasOffers ? "block" : "none");
 
-            // Modifica o margin-top de .more-products caso não haja produtos
-            if (!hasProducts) {
-                gruposProdutos.forEach(grupo => {
-                    grupo.style.marginTop = "0";
-                });
-            }
-
-            if (!hasOffers) {
-                gruposOfertas.forEach(grupo => {
-                    grupo.style.marginTop = "0";
-                });
-            }
-
         } else {
             if (btnVerMais) btnVerMais.style.display = "block";
             if (btnOfertas) btnOfertas.style.display = "block";
-
-            /*
-            gruposProdutos.forEach(grupo => grupo.classList.add("hidden-featured"));
-            gruposOfertas.forEach(grupo => grupo.classList.add("hidden-offer"));
-            */
 
             // Esconde os grupos de produtos e ofertas
             gruposProdutos.forEach((grupo, index) => {
                 grupo.style.display = "none"
                 grupo.style.opacity = 0;
-                grupo.style.marginTop = "50px" // Restabelece o margin-top
             });
 
             gruposOfertas.forEach((grupo, index) => {
                 grupo.style.display = "none"
-                grupo.style.opacity = 0; 
-                grupo.style.marginTop = "50px" // Restabelece o margin-top
+                grupo.style.opacity = 0;
             });
 
             // Exibe os títulos novamente ao sair da pesquisa

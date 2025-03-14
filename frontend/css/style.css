@@ -100,6 +100,8 @@ header div.cart-icon{
 section img {
     width: 300px;
     height: 300px;
+    border-top-left-radius: 10px;  /* Arredonda o canto superior esquerdo */
+    border-top-right-radius: 10px; /* Arredonda o canto superior direito */
 }
 
 div.cart-icon > img {
@@ -150,13 +152,12 @@ section.featured-products {
 
 section.featured-products h2 {
     margin-top: 30px;
-    margin-bottom: 10px;
 }
 
 section.featured-products div.carousel, div.more-products {
     display: flex;
     justify-content: space-between; /* Espaço igual entre os itens */
-    gap: 20px;  /* Espaço entre as imagens */
+    gap: 20px;  /*Espaço entre as imagens */
 }
 
 .product {
@@ -166,7 +167,6 @@ section.featured-products div.carousel, div.more-products {
     background-color: aliceblue;
     border-radius: 12px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.550);
-    margin-top: 20px;
 }
 
 .product:hover {
@@ -174,12 +174,12 @@ section.featured-products div.carousel, div.more-products {
     transition: transform 0.3s ease, border 0.3s ease;
 }
 
-section.featured-products button {
-    margin-top: 10px;
+div.product{
+    margin-top: 50px;
 }
 
-div.more-products {
-    margin-top: 50px;
+section.featured-products button {
+    margin-top: 10px;
 }
 
 /* Oculta os elementos inicialmente */
@@ -194,10 +194,11 @@ section.special-offers {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 50px;
 }
 
 section.special-offers h2 {
-    margin-bottom: 10px;
+    /* margin-top: 30 */
 }
 
 section.special-offers div.offers, div.more-offers{
@@ -239,7 +240,7 @@ section button:hover {
     border: none;
 }
 
-.more-offers {
+.offer {
     margin-top: 50px;
 }
 
@@ -249,7 +250,7 @@ div.hidden-offer {
 
 /* BOTÕES DE "VER MAIS" E "APROVEITE AGORA" */
 #ofertas, #verMais {
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 /* DESCRIÇÃO DOS CARD */
@@ -320,3 +321,4 @@ footer .social-media a:hover img {
     margin-left: 10px;
     transition: transform 0.3s ease, border 0.3s ease;
 }
+
