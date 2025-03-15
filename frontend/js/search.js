@@ -1,88 +1,72 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.querySelector(".search-bar input");     // Campo de busca
-    const products = document.querySelectorAll(".product");             // Lista de produtos
-    const offers = document.querySelectorAll(".offer");                 // Lista de ofertas
+    const searchInput = document.querySelector(".search-bar input"); // Campo de busca
 
-    const gruposProdutos = document.querySelectorAll(".more-products"); // Seleciona todos os grupos
-    const gruposOfertas = document.querySelectorAll(".more-offers");    // Seleciona todos as ofertas
-    const btnVerMais = document.getElementById("verMais"); 
+    const gruposProdutos = document.querySelectorAll(".product"); // Todos os produtos
+    const gruposOfertas = document.querySelectorAll(".offer"); // Todas as ofertas
+    const btnVerMais = document.getElementById("verMais");
     const btnOfertas = document.getElementById("ofertas");
 
     const tituloDestaques = document.querySelectorAll(".titulo-destaques");
     const tituloOfertas = document.querySelectorAll(".titulo-ofertas");
 
+    // Função para resetar a lista e mostrar apenas os 4 primeiros produtos e ofertas
+    function resetProducts() {
+        gruposProdutos.forEach((produto, index) => {
+            produto.style.display = index < 4 ? "block" : "none"; // Mostra apenas os 4 primeiros
+        });
+
+        gruposOfertas.forEach((produto, index) => {
+            produto.style.display = index < 4 ? "block" : "none"; // Mostra apenas os 4 primeiros
+        });
+
+        // Reexibir os títulos corretamente ao limpar a pesquisa
+        tituloDestaques.forEach(titulo => titulo.style.display = "block");
+        tituloOfertas.forEach(titulo => titulo.style.display = "block");
+    }
+
     searchInput.addEventListener("input", function () {
-        const searchTerm = searchInput.value.toLowerCase().trim();   // Normaliza o termo de busca
-        const isSearching = searchTerm.length > 0;           // Verifica se há texto digitado
+        const searchTerm = searchInput.value.toLowerCase().trim(); // Normaliza o termo de busca
+        const isSearching = searchTerm.length > 0; // Verifica se há texto digitado
 
+        let visibleProductCount = 0;
+        let visibleOfferCount = 0;
 
-        // Função para filtrar itens com base no texto
+        // Função para filtrar e exibir no máximo 4 itens correspondentes à busca
         function filterItems(items) {
-            let hasVisibleItems = false;
-
+            let count = 0;
             items.forEach(item => {
                 const name = item.querySelector("p").textContent.toLowerCase(); // Nome do produto ou oferta
                 if (name.includes(searchTerm)) {
-                    item.style.display = "block"; // Mostra o item se corresponder à busca
-                    hasVisibleItems = true;
+                    item.style.display = "block";
+                    count ++
                 } else {
-                    item.style.display = "none"  // Esconde o item se não corresponder
+                    item.style.display = "none";
                 }
             });
-
-            return hasVisibleItems;
+            return count > 0; // Retorna verdadeiro se houver ao menos um item visível
         }
 
-        // Aplica a busca nos produtos e nas ofertas
-        const hasProducts = filterItems(products);
-        const hasOffers = filterItems(offers);
+        // Aplica a busca nos produtos e ofertas
+        const hasProducts = filterItems(gruposProdutos);
+        const hasOffers = filterItems(gruposOfertas);
 
-        // Oculta ou exibe os botões dependendo da busca
-        if (isSearching) {
-            if (btnVerMais) btnVerMais.style.display = "none";
-            if (btnOfertas) btnOfertas.style.display = "none";
-
-            // Garante que os produtos de produtos e ofertas apareçam
-            gruposProdutos.forEach((grupo, index) => {
-                grupo.style.display = "flex"
-                grupo.style.opacity = 1;
-            });
-
-            gruposOfertas.forEach((grupo, index) => {
-                grupo.style.display = "flex"
-                grupo.style.opacity = 1;
-            });
-
-            // Oculta os titulos se não houver produtos ou ofertas
-            tituloDestaques.forEach(titulo => titulo.style.display = hasProducts ? "block" : "none");
-            tituloOfertas.forEach(titulo => titulo.style.display = hasOffers ? "block" : "none");
-
-            // Verifica se apenas ofertas estão sendo exibidas
-            if (!hasProducts & hasOffers) {
-                tituloOfertas.forEach(titulo => titulo.style.marginTop = "0px");
-            } else {
-                tituloOfertas.forEach(titulo => titulo.style.marginTop = "30px");
-            } 
-
-        } else {
-            if (btnVerMais) btnVerMais.style.display = "block";
-            if (btnOfertas) btnOfertas.style.display = "block";
-
-            // Esconde os grupos de produtos e ofertas
-            gruposProdutos.forEach((grupo, index) => {
-                grupo.style.display = "none"
-                grupo.style.opacity = 0;
-            });
-
-            gruposOfertas.forEach((grupo, index) => {
-                grupo.style.display = "none"
-                grupo.style.opacity = 0;
-            });
-
-            // Exibe os títulos novamente ao sair da pesquisa
-            tituloDestaques.forEach(titulo => titulo.style.display = "block");
-            tituloOfertas.forEach(titulo => titulo.style.display = "block");
+        if (!isSearching) {
+            resetProducts(); // Volta para exibir apenas os 4 primeiros ao limpar a busca
         }
+
+        // Oculta os botões "Ver Mais" e "Ofertas" durante a busca
+        if (btnVerMais) btnVerMais.style.display = isSearching ? "none" : "block";
+        if (btnOfertas) btnOfertas.style.display = isSearching ? "none" : "block";
+
+        // Oculta os títulos se não houver produtos ou ofertas visíveis
+        tituloDestaques.forEach(titulo => titulo.style.display = hasProducts ? "block" : "none");
+        tituloOfertas.forEach(titulo => titulo.style.display = hasOffers ? "block" : "none");
+
+        // Ajusta a margem do título "Ofertas" caso não haja produtos
+        tituloOfertas.forEach(titulo => {
+            titulo.style.marginTop = !hasProducts && hasOffers ? "0px" : "30px";
+        });
     });
-});
 
+    resetProducts(); // Garante que ao carregar a página apenas os 4 primeiros produtos aparecem
+});

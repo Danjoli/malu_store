@@ -1,83 +1,77 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const btnVerMais = document.getElementById("verMais"); 
-    const gruposProdutos = document.querySelectorAll(".more-products"); // Seleciona todos os grupos
+document.addEventListener("DOMContentLoaded", function () {
+    const gruposProdutos = document.querySelectorAll(".product"); // Todos os produtos
+    const btnVerMais = document.getElementById("verMais");
+    const gruposOfertas = document.querySelectorAll(".offer"); // Seleciona todos as ofertas
     const btnOfertas = document.getElementById("ofertas");
-    const gruposOfertas = document.querySelectorAll(".more-offers"); // Seleciona todos as ofertas
+    
+    // Função para resetar a lista e mostrar apenas os 4 primeiros produtos
+    function resetProducts() {
+        gruposProdutos.forEach((produto, index) => {
+            // produto.style.display = index < 4 ? "block" : "none"; // Mostra apenas os 4 primeiros
+            if (index < 4) {;
+                produto.style.display = "block";
+            } else {
+                produto.classList.add("fade-out");
+                setTimeout(() => {
+                    produto.style.display = "none";
+                    produto.classList.remove("fade-out");
+                }, 500);
+            }
+        });
 
-    // Função para animar a entrada dos elementos
-    function animarEntrada(elementos) {
-        let delay = 0
-        elementos.forEach((grupo, index) => {
-            grupo.style.display = "flex"  // Torna o elemento visível
-            grupo.style.opacity = 0;    // Inicia a opacidade em 0
-            grupo.style.transform = "translateY(20px)"; // Inicia com o elemento deslocado
-
-            // Forncendo uma pequena transição para cada elemento
-            grupo.style.transition = `opacity 0.5s ease ${delay}s, transform 0.5 ease ${delay}s`;
-
-            setTimeout(() => {
-                grupo.style.opacity = 1;    // Aumeta a opacidade
-                grupo.style.transform = "translateY(0)"; // Retorna ao estado original
-            }, delay * 1500);  // Atraso baseado no índice do elemento
-            delay += 0.3; // Atraso progressivo para cada elemento
+        gruposOfertas.forEach((oferta, index) => {
+            // produto.style.display = index < 4 ? "block" : "none"; // Mostra apenas os 4 primeiros
+            if (index < 4) {;
+                oferta.style.display = "block";
+            } else {
+                oferta.classList.add("fade-out");
+                setTimeout(() => {
+                    oferta.style.display = "none";
+                    oferta.classList.remove("fade-out");
+                }, 500);
+            }
         });
     }
 
-    // Função para animar a saida dos elementos
-    function animarSaida(elementos) {
-        let delay = 0
-        elementos.forEach((grupo, index) => {
-            grupo.style.transition = `opacity 0.5s ease ${delay}s, transform 0.5 ease ${delay}s`;
-            grupo.style.opacity = 0;    // Torna a opacidade 0
-            grupo.style.transform = "translateY(-20px)"; // Desloca o elemento para cima
-            
+    // Função para mostrar todos os produtos com animação
+    function mostrarProdutos() {
+        gruposProdutos.forEach((produto, index) => {
             setTimeout(() => {
-                grupo.style.display = "none"  // Esconde o elemento após a animação
-                grupo.style.transform = "translateY(0)"; // Retorna ao estado original
-            }, delay * 1000);  // Esconde após a animação
+                produto.style.display = "block";
+            }, index * 125); // Atraso progressivo para cada elemento
         });
     }
 
-    // Controle do botão "Ver Mais"
+    // Função para mostrar todas as ofertas com animação
+    function mostrarOfertas() {
+        gruposOfertas.forEach((oferta, index) => {
+            setTimeout(() => {
+                oferta.style.display = "block";
+            }, index * 125); // Atraso progressivo para cada elemento
+        });
+    }
+
+
+    // Evento de clique para alternar entre mostrar mais e menos produtos
     btnVerMais.addEventListener("click", function () {
-        if (btnVerMais.textContent == "Ver mais") {
-            // Exibe todos os produtos com animação
-            animarEntrada(gruposProdutos);
-
-            // Altera o texto do botão para "Voltar"
-            btnVerMais.textContent = "Voltar"; // Exibe todos os produtos com animação
+        if (btnVerMais.textContent === "Ver mais") {
+            mostrarProdutos();
+            btnVerMais.textContent = "Voltar";
         } else {
-            // Esconde os produtos
-            animarSaida(gruposProdutos);
-
-            // Altera o texto do botão de volta para "Ver mais"
+            resetProducts();
             btnVerMais.textContent = "Ver mais";
         }
     });
 
-    // Controle do botão "Aproveite agora"
     btnOfertas.addEventListener("click", function () {
-        if (btnOfertas.textContent == "Aproveite agora") {
-            // Exibe todas as ofertas com animação
-            animarEntrada(gruposOfertas)
-
-            // Altera o texto do botão para "Voltar"
+        if (btnOfertas.textContent === "Aproveite agora") {
+            mostrarOfertas();
             btnOfertas.textContent = "Voltar";
         } else {
-            // Esconde as ofertas 
-            animarSaida(gruposOfertas);
-            gruposOfertas.forEach(grupo => grupo.classList.add("hidden-offer"));
-
-            // Altera o texto do botão de volta para "Ver mais"
+            resetProducts();
             btnOfertas.textContent = "Aproveite agora";
         }
     });
+
+    resetProducts(); // Garante que ao carregar a página apenas os 4 primeiros produtos aparecem
 });
-
-
-
-
-
-
-
-
