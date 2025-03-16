@@ -25,8 +25,6 @@ main {
     flex: 1;
     background-image: url("../imagens/fundo.webp");
     background-size: cover;
-    justify-items: center;
-    justify-content: center;
 }
 
 /* Header */
@@ -70,100 +68,47 @@ header nav a:hover {
     color: rgb(255, 255, 255);
 }
 
+/* main */
 
-/* CONTAINER */
-.produto-detalhes {
+main {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    max-width: 1000px;
-    background-color: white;
-    margin: auto;
-    padding: 20px;
-    /* height: 100vh; */
+    justify-items: center;
+    justify-content: center;
 }
 
-.produto-detalhes h1 {
-    text-align: center;
-    margin-bottom: 25px;
-    padding-bottom: 25px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.200);
-}
-
-#produto-preco {
-    font-size: 2.5rem;
-    color: red;
-    margin-bottom: 25px;
-    padding-bottom: 25px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.200);
-}
-
-.produto-imagem > img {
-    flex: 1;
-    height: 500px;
-    width: 500px;
-    transition: 0.8s;
-}
-
-.produto-imagem > img:hover {
-    box-shadow: 1px 1px 20px black;
-}
-
-#comprar-btn {
-    padding: 10px;
-    background-color: darkgreen;
-    color: white;
-    font-weight: bolder;
-    font-size: 1.5rem;
-    transition: .5s;
-}
-
-#comprar-btn:hover {
+section {
     padding: 15px;
-    background-color: rgba(0, 100, 0, 0.700);;
-}
-
-.produto-info {
-    flex: 1 1 45%;
-    display: flex;
-    flex-direction: column;
-}
-
-.descricao {
-    margin-top: 20px;
-    border-top: 1px solid rgba(0, 0, 0, 0.200);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.200);
-    width: 100%;
-    padding: 20px 0px 20px 0px;
-}
-
-.descricao-inicial {
-    display: flex;
-    justify-content: space-between;
-    /* background-color: aqua; */
-    align-items: center;
-}
-
-.descricao p {
-    margin-top: 15px;
-    display: none;
-}
-
-#btnDescricao {
     background-color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    font-size: 2rem;
-    transition: .5s;
-    border-radius: 100%;
-    transition: .5s;
+    max-width: 1300px;  /* 1250px */
+    flex-wrap: wrap;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.550);
 }
 
-#btnDescricao:hover {
-    background-color: rgba(0, 0, 0, 0.100);
-    /* padding: 0px 10px 0px 10px; */
-    padding: 0px 5px 0px 5px;
+section h1 {
+    text-align: center;
+    font-weight: bolder;
+    font-size: 3rem;
+}
+
+section h2 {
+    margin-top: 20px;
+    font-size: 2rem;
+}
+
+section p {
+    text-align: justify;
+    margin-top: 20px;
+    font-size: 1.5rem;
+    text-indent: 4rem;
+}
+
+section ul {
+    margin-left: 90px;
+}
+
+section li {
+    font-size: 1.5rem;
+    margin-top: 5px;
 }
 
 /* Rodapé */

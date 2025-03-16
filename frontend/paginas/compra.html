@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/compra.css">
+    <title>Detalhes do Produto</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+</head>
+<body>
+    <header>
+        <h1>Malu Store</h1>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="../paginas/sobre=nós.html">Sobre</a>
+            <a href="#contato">Contato</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="produto-detalhes">
+            <div class="produto-imagem">
+                <img id="produto-img" src="" alt="Imagem do Produto">
+            </div>
+
+            <div class="produto-info">
+                <h1 id="produto-nome"></h1>
+                <span id="produto-preco"></span>
+                <button id="comprar-btn">Comprar</button>
+            </div>
+
+             <!-- Descrição dentro da mesma div para alinhar corretamente -->
+            <div class="descricao">
+                <div class="descricao-inicial">
+                    <h3>Descrição</h3>
+                    <button id="btnDescricao">+</button>
+                </div>
+                <p id="produto-descricao"></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="../paginas/sobre=nós.html" target="_self">Sobre nós</a>
+            <a href="../paginas/poilitica-de-privacidade.html" target="_self">Política de privacidade</a>
+            <a href="../paginas/termos-condições.html" target="_self">Termos e condições</a>
+        </div>
+        <div class="social-media">
+            <a href="https://www.instagram.com/malu_storemodafemina/" target="_blank"><img src="../imagens/icon-instagram.png" alt="Icone do Instagram"></a>
+            <a href="#"><img src="../imagens/icon-facebook.png" alt="Icone do Facebook"></a>
+            <a href="#"><img src="../imagens/icon-x.png" alt="Icone do Twitter"></a>
+        </div>
+        <div class="contact-info" id="contato">
+            <p>Email: <span id = "email" onclick="copyToClipboard('email')">contato@malustore.com</span></p>
+            <p>Telefone: <span id = "telefone" onclick="copyToClipboard('telefone')">(11) 99999-9999</span></p>
+        </div>
+    </footer>
+
+    <script src="../js/compra.js"></script>
+    <script src="../js/botao-descricao.js"></script>
+</body>
+</html>
