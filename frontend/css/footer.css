@@ -1,0 +1,63 @@
+/* Rodapé */
+
+footer {
+    display: flex;
+    background-color: rgb(129, 0, 60);
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    color: black;
+    padding: 20px 0px 20px 10px;
+}
+
+footer div.footer-links {
+    justify-items: center;
+}
+
+footer div.footer-links > a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px; /* Ajuste a espessura */
+    font-weight: bolder;
+}
+
+footer div.social-media {
+    display: flex;
+    margin-left: 100px;
+}
+
+footer div.contact-info {
+    justify-items: center;
+}
+
+footer div.contact-info > p:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px; /* Ajuste a espessura */
+    font-weight: bolder;
+}
+
+footer a {
+    display: flex;
+    text-decoration: none;
+    color: black;
+    color: aliceblue;
+    padding: 5px;
+}
+
+footer p {
+    color: aliceblue;
+    padding: 5px;
+}
+
+footer img {
+    margin: 5px;
+    transition: 0.5s;
+    border-radius: 100%;
+}
+
+footer .social-media a:hover img {
+    transform: scale(1.2);
+    border: 1.5px solid white;
+    margin-left: 10px;
+    transition: transform 0.3s ease, border 0.3s ease;
+}
