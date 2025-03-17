@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const gruposProdutos = document.querySelectorAll(".product"); // Todos os produtos
     const btnVerMais = document.getElementById("verMais");
+
     const gruposOfertas = document.querySelectorAll(".offer"); // Seleciona todos as ofertas
     const btnOfertas = document.getElementById("ofertas");
     
