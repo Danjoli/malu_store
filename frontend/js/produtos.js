@@ -40,3 +40,5 @@ function carregarProdutos() {
 
 // Chama a função ao carregar a página
 document.addEventListener("DOMContentLoaded", carregarProdutos);
+
+
