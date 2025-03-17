@@ -25,7 +25,7 @@ function carregarOfertas() {
         const div = document.createElement("div");
         div.classList.add("offer");
         div.innerHTML = `
-            <a href="../paginas/compra.html?id=${oferta.id}">
+            <a href="../paginas/compra-ofertas.html?id=${oferta.id}">
                 <img src="${oferta.imagem}" alt="${oferta.nome}">
                 <div class="descrição-card">
                     <p>${oferta.nome}</p>
