@@ -4,63 +4,110 @@
 
 footer {
     display: flex;
+    flex-wrap: wrap;
     background-color: rgb(129, 0, 60);
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    color: black;
-    padding: 20px 0px 20px 10px;
+    color: aliceblue;
+    padding: 20px;
+    text-align: center;
 }
 
+/* LINKS DO FOOTER */
 footer div.footer-links {
-    justify-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-footer div.footer-links > a:hover {
+footer div.footer-links a {
+    text-decoration: none;
+    color: aliceblue;
+    padding: 5px;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+footer div.footer-links a:hover {
     text-decoration: underline;
-    text-decoration-thickness: 3px; /* Ajuste a espessura */
+    text-decoration-thickness: 3px;
     font-weight: bolder;
 }
 
+/* REDES SOCIAIS */
 footer div.social-media {
     display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
     margin-left: 100px;
 }
 
-footer div.contact-info {
-    justify-items: center;
-}
-
-footer div.contact-info > p:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 3px; /* Ajuste a espessura */
-    font-weight: bolder;
-}
-
-footer a {
-    display: flex;
-    text-decoration: none;
-    color: black;
-    color: aliceblue;
-    padding: 5px;
-}
-
-footer p {
-    color: aliceblue;
-    padding: 5px;
-    cursor: pointer;
-}
-
-footer img {
-    margin: 5px;
-    transition: 0.5s;
-    border-radius: 100%;
+footer div.social-media a img {
+    width: 40px;
+    transition: 0.3s;
+    border-radius: 50%;
 }
 
 footer .social-media a:hover img {
     transform: scale(1.2);
     border: 1.5px solid white;
-    margin-left: 10px;
     transition: transform 0.3s ease, border 0.3s ease;
+}
+
+/* CONTATO */
+footer div.contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer div.contact-info p {
+    padding: 5px;
+    cursor: pointer;
+}
+
+footer div.contact-info p:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    font-weight: bolder;
+}
+
+
+/* ======= FOOTER ======= */
+
+/* MEDIA QUERIES PARA RESPONSIVIDADE */
+
+/* TELAS PEQUENAS (MOBILE) */
+@media (max-width: 775px) {
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    footer div.social-media {
+        justify-content: center;
+        margin: 10px 0;
+    }
+
+    footer div.footer-links, footer div.contact-info {
+        margin-bottom: 10px;
+    }
+}
+
+/* TELAS MUITO PEQUENAS (MOBILE PEQUENO) */
+@media (max-width: 480px) {
+    footer {
+        padding: 15px;
+    }
+
+    footer div.social-media a img {
+        width: 35px;
+    }
+
+    footer div.footer-links a {
+        font-size: 0.9rem;
+    }
 }
