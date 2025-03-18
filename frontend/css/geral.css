@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+/* CONFIGURAÇÕES GERAIS */
+
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&display=swap');
+
+:root {
+    --fonte-principal: 'Playwrite HU', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: palevioletred;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    background-image: url("../imagens/fundo.webp");
+    background-size: cover;
+}

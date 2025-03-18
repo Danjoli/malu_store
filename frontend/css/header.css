@@ -1,0 +1,83 @@
+@charset "UTF-8";
+
+/* Header */
+
+header {
+    background-color: pink;
+}
+
+header h1{
+    text-align: center;
+    padding: 10px 0px 20px;
+    color: darkorchid;
+    text-shadow: 2px 2px 2px rgb(0, 0, 0);
+    font-size: 4rem;
+    font-family: var(--fonte-principal);
+}
+
+header nav {
+    display: flex;
+    justify-content: center;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    background-color: rgb(129, 0, 60);
+    padding: 10px;
+}
+
+header nav a{
+    display: flex;
+    margin-left: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #f8f8f8fd;
+    text-decoration: none;
+    transition: .5s;
+}
+
+header nav a:hover {
+    background-color: rgb(255, 120, 226);
+    color: rgb(255, 255, 255);
+}
+
+header div.container1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+}
+
+header div.search-bar {
+    display: flex;
+    margin: 0px 0px 10px 10px;
+}
+
+header div.search-bar input {
+    padding: 10px;
+    width: 500px;
+    transition: 1s;
+    border-radius: 15px;
+}
+
+header div.search-bar input:hover {
+    width: 1000px;
+}
+
+header div.cart-icon{
+    display: flex;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+header div.cart-icon > a > img {
+    width: 50px;
+    transition: .5s;
+    border-radius: 50%;
+    margin-right: 7px;
+}
+
+header div.cart-icon > a > img:hover {
+    background-color: rgba(0, 0, 0, 0.200);
+    cursor: pointer;
+}

@@ -6,24 +6,47 @@ async function carregarProdutos() {
         }
 
         const produtos = await response.json();
-        const container = document.getElementById("produtos");
-        if (!container) return;
+
+        // Garantir que os containers existam antes de tentar adicionar produtos a eles
+        const containerProdutos = document.getElementById("produtos");
+        const containerOfertas = document.getElementById("offers");
+
+        if (!containerProdutos || !containerOfertas) return;
 
         produtos.forEach((produto) => {
-            const div = document.createElement("div");
-            div.classList.add("product");
+            if (!produto.precoAntigo) {
+                // Produto normal
+                const div = document.createElement("div");
+                div.classList.add("product");
 
-            div.innerHTML = `
-                <a href="../paginas/compra.html?id=${produto.id}">
-                    <img src="${produto.imagem}" alt="${produto.nome}">
-                    <div class="descrição-card">
-                        <p>${produto.nome}</p>
-                        <span>${produto.preco}</span>
-                    </div>
-                </a>
-            `;
+                div.innerHTML = `
+                    <a href="../paginas/compra.html?id=${produto.id}">
+                        <img src="${produto.imagem}" alt="${produto.nome}">
+                        <div class="descrição-card">
+                            <p>${produto.nome}</p>
+                            <span>${produto.preco}</span>
+                        </div>
+                    </a>
+                `;
 
-            container.appendChild(div);
+                containerProdutos.appendChild(div);
+            } else {
+                // Produto com oferta (com precoAntigo)
+                const div = document.createElement("div");
+                div.classList.add("offer");
+
+                div.innerHTML = `
+                    <a href="../paginas/compra.html?id=${produto.id}">
+                        <img src="${produto.imagem}" alt="${produto.nome}">
+                        <div class="descrição-card">
+                            <p>${produto.nome}</p>
+                            <span><del>${produto.precoAntigo}</del> ${produto.preco}</span>
+                        </div>
+                    </a>
+                `;
+
+                containerOfertas.appendChild(div);
+            }
         });
 
         // Dispara um evento para avisar que os produtos foram carregados

@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* Rodapé */
 
 footer {
@@ -47,6 +49,7 @@ footer a {
 footer p {
     color: aliceblue;
     padding: 5px;
+    cursor: pointer;
 }
 
 footer img {

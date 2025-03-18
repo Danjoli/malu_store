@@ -10,14 +10,25 @@ fetch('../produtos.json')
     .then(produtos => {
         // Buscar o produto pelo ID
         const produto = produtos.find(p => p.id == produtoId);
-
-        if (produto) {
-            document.getElementById('produto-img').src = produto.imagem;
-            document.getElementById('produto-nome').innerText = produto.nome;
-            document.getElementById('produto-descricao').innerText = produto.descricao;
-            document.getElementById('produto-preco').innerText = produto.preco;
+        if (!produto.precoAntigo){
+            if (produto) {
+                document.getElementById('produto-img').src = produto.imagem;
+                document.getElementById('produto-nome').innerText = produto.nome;
+                document.getElementById('produto-descricao').innerText = produto.descricao;
+                document.getElementById('produto-preco-atual').innerText = produto.preco;
+            } else {
+                document.querySelector('.produto-detalhes').innerHTML = "<h2>Produto não encontrado</h2>";
+            }
         } else {
-            document.querySelector('.produto-detalhes').innerHTML = "<h2>Produto não encontrado</h2>";
+            if (produto) {
+                document.getElementById('produto-img').src = produto.imagem;
+                document.getElementById('produto-nome').innerText = produto.nome;
+                document.getElementById('produto-descricao').innerText = produto.descricao;
+                document.getElementById('produto-preco-antigo').innerText = produto.precoAntigo;
+                document.getElementById('produto-preco-atual').innerText = produto.preco;
+            } else {
+                document.querySelector('.produto-detalhes').innerHTML = "<h2>Oferta não encontrado</h2>";
+            }
         }
     })
     .catch(error => console.error('Erro ao carregar os produtos:', error));
