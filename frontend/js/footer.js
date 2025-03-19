@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const caminhosBase = ["frontend/imagens/", "../imagens/"]; // Caminhos possíveis para as imagens
+    const caminhosLinks = ["frontend/paginas/", "../paginas/"]; // Caminhos possíveis para os links
 
     function criarFooter() {
         // Cria a estrutura do footer
@@ -44,14 +45,15 @@ document.addEventListener("DOMContentLoaded", function () {
         // Adiciona o footer ao container
         document.getElementById("footer-container").appendChild(footer);
         
-        // Ajusta os caminhos após a criação do footer
-        ajustarCaminhos(0); // Ajusta os caminhos com o primeiro caminho da lista
+        // Ajusta os caminhos das imagens e dos links
+        ajustarCaminhos(0); // Ajusta os caminhos com o primeiro caminho da lista de imagens
+        ajustarLinks(); // Ajusta os caminhos dos links dependendo de onde estamos (index ou dentro de paginas)
     }
 
     // Função para ajustar os caminhos das imagens
     function ajustarCaminhos(index) {
         if (index >= caminhosBase.length) {
-            console.error("Erro ao ajustar os caminhos: Nenhuma opção válida.");
+            console.error("Erro ao ajustar os caminhos das imagens: Nenhuma opção válida.");
             return;
         }
 
@@ -66,9 +68,26 @@ document.addEventListener("DOMContentLoaded", function () {
                     img.src = img.src.replace(/(frontend\/imagens\/|..\/imagens\/)/, caminhosBase[index]);
                 });
 
-                console.log(`Caminho ajustado para: ${caminhosBase[index]}`);
+                console.log(`Caminho ajustado para as imagens: ${caminhosBase[index]}`);
             })
             .catch(() => ajustarCaminhos(index + 1)); // Tenta o próximo caminho se o atual falhar
+    }
+
+    // Função para ajustar os caminhos dos links dependendo de onde estamos
+    function ajustarLinks() {
+        // Detecta se estamos no index ou em uma página dentro da pasta "paginas"
+        const isIndexPage = window.location.pathname.indexOf('index.html') !== -1;
+
+        // Ajusta os links com a classe .dynamic-path
+        document.querySelectorAll(".dynamic-path").forEach(link => {
+            const currentHref = link.getAttribute("href");
+            const adjustedHref = isIndexPage 
+                ? currentHref.replace("frontend/paginas/", "frontend/paginas/") 
+                : currentHref.replace("frontend/paginas/", "../paginas/");
+            link.setAttribute("href", adjustedHref);
+        });
+
+        console.log(`Caminho ajustado para os links`);
     }
 
     // Inicia a criação do footer
