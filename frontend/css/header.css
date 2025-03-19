@@ -131,7 +131,11 @@ header div.cart-icon a img:hover {
     }
 
     header div.search-bar input {
-        width: 90%;
+        width: 50%;
+    }
+
+    header div.search-bar input:hover {
+        width: 80%; /* Reduz o tamanho da barra de pesquisa */
     }
 
     header div.cart-icon a img {
