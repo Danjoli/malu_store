@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const footerLinks = document.createElement("div");
         footerLinks.className = "footer-links";
         footerLinks.innerHTML = `
-            <a href="frontend/paginas/sobre-nos.html" target="_self" class="dynamic-path">Sobre nós</a>
-            <a href="frontend/paginas/politica-de-privacidade.html" target="_self" class="dynamic-path">Política de privacidade</a>
-            <a href="frontend/paginas/termos-condicoes.html" target="_self" class="dynamic-path">Termos e condições</a>
+            <a href="frontend/paginas/sobre=nós.html" target="_self" class="dynamic-path">Sobre nós</a>
+            <a href="frontend/paginas/poilitica-de-privacidade.html" target="_self" class="dynamic-path">Política de privacidade</a>
+            <a href="frontend/paginas/termos-condições.html" target="_self" class="dynamic-path">Termos e condições</a>
         `;
         footer.appendChild(footerLinks);
 
