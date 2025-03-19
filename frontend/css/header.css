@@ -1,12 +1,12 @@
 @charset "UTF-8";
 
-/* Header */
-
+/* HEADER */
 header {
     background-color: pink;
 }
 
-header h1{
+/* TÍTULO */
+header h1 {
     text-align: center;
     padding: 10px 0px 20px;
     color: darkorchid;
@@ -15,25 +15,24 @@ header h1{
     font-family: var(--fonte-principal);
 }
 
+/* NAVBAR */
 header nav {
     display: flex;
     justify-content: center;
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 15px;
+    flex-wrap: wrap; /* Permite que os itens quebrem linha se necessário */
     background-color: rgb(129, 0, 60);
     padding: 10px;
 }
 
-header nav a{
-    display: flex;
-    margin-left: 10px;
+header nav a {
     border: 1px solid black;
     border-radius: 5px;
-    padding: 5px;
+    padding: 8px 12px;
     background-color: #f8f8f8fd;
     text-decoration: none;
-    transition: .5s;
+    font-size: 1rem;
+    transition: 0.5s;
 }
 
 header nav a:hover {
@@ -41,43 +40,101 @@ header nav a:hover {
     color: rgb(255, 255, 255);
 }
 
+/* CONTAINER DO HEADER */
 header div.container1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 15px;
+    flex-wrap: wrap;
 }
 
+/* BARRA DE PESQUISA */
 header div.search-bar {
     display: flex;
-    margin: 0px 0px 10px 10px;
+    flex: 1; /* Faz com que ocupe o máximo de espaço possível */
+    padding: 10px;
 }
 
 header div.search-bar input {
     padding: 10px;
-    width: 500px;
-    transition: 1s;
+    width: 20%;
     border-radius: 15px;
+    transition: 1s;
 }
 
+/* No hover a barra cresce, mas no mobile ela se mantém menor */
 header div.search-bar input:hover {
-    width: 1000px;
+    width: 40%;
 }
 
-header div.cart-icon{
+/* ÍCONE DO CARRINHO */
+header div.cart-icon {
     display: flex;
-    margin-left: auto;
+    align-items: center;
     margin-right: 20px;
 }
 
-header div.cart-icon > a > img {
-    width: 50px;
-    transition: .5s;
+header div.cart-icon a img {
+    width: 40px;
+    transition: 0.3s;
     border-radius: 50%;
     margin-right: 7px;
 }
 
-header div.cart-icon > a > img:hover {
-    background-color: rgba(0, 0, 0, 0.200);
+header div.cart-icon a img:hover {
+    background-color: rgba(0, 0, 0, 0.2);
     cursor: pointer;
+}
+
+
+/* ======= HEADER ======= */
+
+/*  MEDIA QUERIES PARA RESPONSIVIDADE  */
+
+/*  **TELAS MENORES QUE 775px (Celulares)** */
+@media (max-width: 775px) {
+    header h1 {
+        font-size: 2.5rem; /* Reduz o tamanho do título */
+    }
+
+    header nav {
+        flex-direction: column; /* Menu em coluna no mobile */
+        text-align: center;
+    }
+
+    header nav a {
+        justify-content: center;
+    }
+
+    header div.search-bar input {
+        width: 40%; /* Reduz o tamanho da barra de pesquisa */
+    }
+
+    header div.search-bar input:hover {
+        width: 80%; /* Reduz o tamanho da barra de pesquisa */
+    }
+
+    header div.cart-icon {
+        margin: 10px auto; /* Centraliza o ícone do carrinho */
+    }
+}
+
+/* **TELAS MENORES QUE 480px (Celulares Pequenos)** */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header nav a {
+        font-size: 0.9rem; /* Diminui um pouco o tamanho do menu */
+        padding: 6px 10px;
+    }
+
+    header div.search-bar input {
+        width: 90%;
+    }
+
+    header div.cart-icon a img {
+        width: 35px; /* Ícone do carrinho menor */
+    }
 }

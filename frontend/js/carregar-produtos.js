@@ -1,6 +1,6 @@
 async function carregarProdutos() {
     try {
-        const response = await fetch("../produtos.json");
+        const response = await fetch("frontend/produtos.json");
         if (!response.ok) {
             throw new Error("Erro ao carregar os produtos");
         }
@@ -20,7 +20,7 @@ async function carregarProdutos() {
                 div.classList.add("product");
 
                 div.innerHTML = `
-                    <a href="../paginas/compra.html?id=${produto.id}">
+                    <a href="frontend/paginas/compra.html?id=${produto.id}">
                         <img src="${produto.imagem}" alt="${produto.nome}">
                         <div class="descrição-card">
                             <p>${produto.nome}</p>
@@ -36,7 +36,7 @@ async function carregarProdutos() {
                 div.classList.add("offer");
 
                 div.innerHTML = `
-                    <a href="../paginas/compra.html?id=${produto.id}">
+                    <a href="frontend/paginas/compra.html?id=${produto.id}">
                         <img src="${produto.imagem}" alt="${produto.nome}">
                         <div class="descrição-card">
                             <p>${produto.nome}</p>

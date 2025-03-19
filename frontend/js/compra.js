@@ -10,9 +10,12 @@ fetch('../produtos.json')
     .then(produtos => {
         // Buscar o produto pelo ID
         const produto = produtos.find(p => p.id == produtoId);
+        // Ajusta o caminho da imagem, removendo "frontend/" se existir
+        const caminhoImagemCorrigido = produto.imagem.replace("frontend/", "../");
         if (!produto.precoAntigo){
             if (produto) {
-                document.getElementById('produto-img').src = produto.imagem;
+                // Atualiza os elementos na página
+                document.getElementById('produto-img').src = caminhoImagemCorrigido;
                 document.getElementById('produto-nome').innerText = produto.nome;
                 document.getElementById('produto-descricao').innerText = produto.descricao;
                 document.getElementById('produto-preco-atual').innerText = produto.preco;
@@ -21,7 +24,8 @@ fetch('../produtos.json')
             }
         } else {
             if (produto) {
-                document.getElementById('produto-img').src = produto.imagem;
+                // Atualiza os elementos na página
+                document.getElementById('produto-img').src = caminhoImagemCorrigido;;
                 document.getElementById('produto-nome').innerText = produto.nome;
                 document.getElementById('produto-descricao').innerText = produto.descricao;
                 document.getElementById('produto-preco-antigo').innerText = produto.precoAntigo;
