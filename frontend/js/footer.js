@@ -38,13 +38,22 @@ document.addEventListener("DOMContentLoaded", function () {
         contactInfo.className = "contact-info";
         contactInfo.id = "contato";
         contactInfo.innerHTML = `
-            <p onclick="copyToClipboard(this)">Email: elienealvesdelima5@gmail.com</p>
-            <p onclick="copyToClipboard(this)">Telefone: (11) 95459-8885</p>
+            <p id="copy-email">Email: elienealvesdelima5@gmail.com</p>
+            <p id="copy-phone">Telefone: (11) 95459-8885</p>
         `;
         footer.appendChild(contactInfo);
 
         // Adiciona o footer ao container
         document.getElementById("footer-container").appendChild(footer);
+
+        // Agora adicionamos os eventos de clique para copiar o texto
+        document.getElementById("copy-email").addEventListener("click", function () {
+            copyToClipboard(this);
+        });
+
+        document.getElementById("copy-phone").addEventListener("click", function () {
+            copyToClipboard(this);
+        });
     }
 
     // Função para copiar texto ao clicar
