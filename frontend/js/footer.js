@@ -44,19 +44,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Função para copiar texto ao clicar
     function copyToClipboard(element) {
-        const text = element.textContent.split(": ")[1];  // Remove "Email:" ou "Telefone:"
-    
-        if (!text) {
-            console.error("Nenhum texto encontrado para copiar.")
-            return;
-        }
-    
+        const text = element.textContent.replace("Email: ", "").replace("Telefone: ", "");
         navigator.clipboard.writeText(text).then(() => {
-            alert(`Erro ao copiar: ${text}`);
-        }).catch(err => {
-            console.error("Erro ao copiar: ", err);
-        });
+            alert(`Copiado: ${text}`);
+        }).catch(err => console.error("Erro ao copiar", err));
     }
+
 
     criarFooter();
 });
