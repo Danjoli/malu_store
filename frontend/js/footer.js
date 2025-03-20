@@ -17,13 +17,13 @@ document.addEventListener("DOMContentLoaded", function () {
         socialMedia.className = "social-media";
         socialMedia.innerHTML = `
             <a href="https://www.instagram.com/malu_storemodafemina/" target="_blank">
-                <img src="/malu_store-copia/frontend/imagens/icon-instagram.png" alt="Ícone do Instagram">
+                <img src="/malu_store/frontend/imagens/icon-instagram.png" alt="Ícone do Instagram">
             </a>
             <a href="https://wa.me/5511954598885" target="_blank">
-                <img src="/malu_store-copia/frontend/imagens/icon-whatsapp.png" alt="Ícone do WhatsApp">
+                <img src="/malu_store/frontend/imagens/icon-whatsapp.png" alt="Ícone do WhatsApp">
             </a>
             <a href="https://www.facebook.com/profile.php?id=61574456004558" target="_blank">
-                <img src="/malu_store-copia/frontend/imagens/icon-facebook.png" alt="Ícone do Facebook">
+                <img src="/malu_store/frontend/imagens/icon-facebook.png" alt="Ícone do Facebook">
             </a>
         `;
         footer.appendChild(socialMedia);
