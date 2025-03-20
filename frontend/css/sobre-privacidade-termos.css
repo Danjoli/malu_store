@@ -1,27 +1,31 @@
 @charset "UTF-8";
 
 /* MAIN */
-
 main {
     display: flex;
-    justify-items: center;
     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;  /* Permite que os elementos quebrem linha em telas pequenas */
+    padding: 20px;
 }
 
 /* SECTION */
-
 section {
     padding: 15px;
     background-color: white;
-    max-width: 1300px;  /* 1250px */
+    max-width: 70%;  /* Adapta melhor em telas menores */
+    width: 100%;
     flex-wrap: wrap;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.550);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.55);
+    border-radius: 10px;  /* Bordas arredondadas para um design mais moderno */
 }
 
+/* TITULOS */
 section h1 {
     text-align: center;
     font-weight: bolder;
-    font-size: 3rem;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
 }
 
 section h2 {
@@ -29,19 +33,79 @@ section h2 {
     font-size: 2rem;
 }
 
+/* TEXTOS */
 section p {
     text-align: justify;
     margin-top: 20px;
-    font-size: 1.5rem;
-    text-indent: 4rem;
+    font-size: 1.3rem;
+    text-indent: 2rem;
+    line-height: 1.6; /* Melhora a legibilidade */
 }
 
 section ul {
-    margin-left: 90px;
+    margin-left: 40px;
 }
 
 section li {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-top: 5px;
 }
 
+/* MEDIA QUERIES PARA RESPONSIVIDADE */
+@media (max-width: 1024px) {
+    section {
+        max-width: 95%;
+    }
+    
+    section h1 {
+        font-size: 2.2rem;
+    }
+
+    section h2 {
+        font-size: 1.8rem;
+    }
+
+    section p, section li {
+        font-size: 1.2rem;
+        text-indent: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    section {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    section h1 {
+        font-size: 2rem;
+    }
+
+    section h2 {
+        font-size: 1.6rem;
+    }
+
+    section p, section li {
+        font-size: 1.1rem;
+        text-indent: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    section {
+        padding: 10px;
+    }
+
+    section h1 {
+        font-size: 1.8rem;
+    }
+
+    section h2 {
+        font-size: 1.4rem;
+    }
+
+    section p, section li {
+        font-size: 1rem;
+        text-indent: 0.5rem;
+    }
+}
