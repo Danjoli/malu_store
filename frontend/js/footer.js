@@ -42,13 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("footer-container").appendChild(footer);
     }
 
-    // Função para copiar texto ao clicar
-    function copyToClipboard(element) {
-        const text = element.textContent.replace("Email: ", "").replace("Telefone: ", "");
-        navigator.clipboard.writeText(text).then(() => {
-            alert(`Copiado: ${text}`);
-        }).catch(err => console.error("Erro ao copiar", err));
-    }
+    
 
 
     criarFooter();
