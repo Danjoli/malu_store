@@ -33,11 +33,12 @@ defineProps({
             R$ {{ product.price }}
           </p>
 
-          <button
-            class="mt-4 w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700 transition"
-          >
+          <a
+            :href="`/produtos/${product.id}`"
+            class="mt-4 block text-center bg-pink-600 text-white py-2 rounded hover:bg-pink-700 transition"
+            >
             Ver produto
-          </button>
+          </a>
         </div>
       </div>
     </div>
