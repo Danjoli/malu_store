@@ -1,17 +1,19 @@
 <script setup>
+import MainLayout from '@/Layouts/MainLayout.vue';
+
 defineProps({
     message: String
 })
 </script>
 
 <template>
-    <div class="p-8">
-        <h1 class="text-3xl font-bold text-red-800">
+    <MainLayout>
+        <h2 class="text-3xl font-bold text-gray-800">
             {{ message }}
-        </h1>
+        </h2>
 
         <p class="mt-4 text-gray-600">
-            Laravel + Inertia + Vue funcionando corretamente 🚀
+            loja de roupas online começa aqui 👕✨
         </p>
-    </div>
+    </MainLayout>
 </template>
