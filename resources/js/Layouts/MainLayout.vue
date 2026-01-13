@@ -13,7 +13,7 @@
 
                 <nav class="space-x-6 text-gray-600">
                     <a href="/" class="hover:text-black">Home</a>
-                    <a href="#" class="hover:text-black">Produtos</a>
+                    <a href="/produtos" class="hover:text-black">Produtos</a>
                     <a href="#" class="hover:text-black">Contato</a>
                 </nav>
             </div>

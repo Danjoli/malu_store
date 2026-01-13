@@ -8,3 +8,8 @@ Route::get('/', function () {
         'message' => 'Bem-vindo à loja da Malu'
     ]);
 });
+
+Route::get('/produtos', function () {
+    return Inertia::render('Products');
+});
+
