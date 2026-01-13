@@ -1,26 +1,9 @@
 <script setup>
 import MainLayout from '@/Layouts/MainLayout.vue'
 
-const products = [
-  {
-    id: 1,
-    name: 'Vestido Floral',
-    price: 'R$ 129,90',
-    image: 'https://via.placeholder.com/300x400'
-  },
-  {
-    id: 2,
-    name: 'Blusa Feminina',
-    price: 'R$ 79,90',
-    image: 'https://via.placeholder.com/300x400'
-  },
-  {
-    id: 3,
-    name: 'Calça Jeans',
-    price: 'R$ 159,90',
-    image: 'https://via.placeholder.com/300x400'
-  }
-]
+defineProps({
+  products: Array
+})
 </script>
 
 <template>
@@ -47,7 +30,7 @@ const products = [
           </h3>
 
           <p class="text-pink-600 font-bold mt-2">
-            {{ product.price }}
+            R$ {{ product.price }}
           </p>
 
           <button
