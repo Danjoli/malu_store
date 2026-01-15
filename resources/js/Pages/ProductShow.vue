@@ -41,3 +41,14 @@ defineProps({
     </div>
   </MainLayout>
 </template>
+
+import cartService from '../services/cartService'
+
+methods: {
+  addToCart() {
+    cartService.add(this.product.id)
+      .then(() => {
+        alert('Produto adicionado ao carrinho')
+      })
+  }
+}
