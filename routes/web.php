@@ -1,16 +1,44 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AdminController;
 
-Route::get('/login', function() {
-    return view('admin.auth.login');
-})->name('admin.login');
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOGIN ADMIN
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
 
-Route::get('/dashboard', function() {
-    return view('admin.dashboard');
-})->name('admin.dashboard');
+    /*
+    |--------------------------------------------------------------------------
+    | ÁREA PROTEGIDA (QUALQUER ADMIN LOGADO)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('auth:admin')->group(function () {
 
-Route::get('/clients', function() {
-    return view('admin.clients.index');
-})->name('admin.clients.index');
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | APENAS SUPERADMIN PODE GERENCIAR ADMINS
+        |--------------------------------------------------------------------------
+        */
+        Route::middleware(['auth:admin', 'admin.role:superadmin'])->group(function () {
+            Route::resource('admins', AdminController::class);
+        });
+
+    });
+});
+
+
