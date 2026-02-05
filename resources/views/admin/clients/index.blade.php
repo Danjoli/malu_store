@@ -1,10 +1,10 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Administradores')
+@section('title', 'Clientes')
 
 @section('content')
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Administradores</h1>
+    <h1 class="text-3xl font-bold">Clientes</h1>
 </div>
 
 {{-- ALERTA DE SUCESSO --}}
@@ -51,7 +51,7 @@
                 @empty
                 <tr>
                     <td colspan="4" class="p-6 text-center text-gray-500">
-                        Nenhum administrador cadastrado ainda.
+                        Nenhum cliente cadastrado ainda.
                     </td>
                 </tr>
                 @endforelse

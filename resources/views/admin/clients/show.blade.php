@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Detalhes do Administrador')
+@section('title', 'Detalhes do Cliente')
 
 @section('content')
 <h1 class="text-3xl font-bold mb-6">Detalhes do Cliente</h1>
