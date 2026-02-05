@@ -15,6 +15,8 @@ class ClientController extends Controller
 
     public function show(User $client)
     {
+        $client->load('addresses');
+        
         return view('admin.clients.show', [
             'user' => $client
         ]);

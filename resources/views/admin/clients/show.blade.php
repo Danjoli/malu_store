@@ -55,6 +55,22 @@
         </div>
     </div>
 
+    {{-- ENDEREÇOS --}}
+    @if($user->addresses->count())
+        <div class="pt-6 border-t">
+            <h2 class="text-xl font-bold mb-4">Endereço(s)</h2>
+
+            @foreach($user->addresses as $address)
+                <div class="bg-gray-50 p-4 rounded mb-3 border">
+                    <p><strong>Rua:</strong> {{ $address->street }}, {{ $address->number }}</p>
+                    <p><strong>Bairro:</strong> {{ $address->neighborhood }}</p>
+                    <p><strong>Cidade:</strong> {{ $address->city }} - {{ $address->state }}</p>
+                    <p><strong>CEP:</strong> {{ $address->zip_code }}</p>
+                </div>
+            @endforeach
+        </div>
+    @endif
+
     {{-- BOTÕES --}}
     <div class="flex justify-between items-center pt-6 border-t">
         <a href="{{ route('admin.clients.index') }}"
