@@ -20,8 +20,8 @@
                         <li class="mb-3"><a href="{{ route('admin.clients.index') }}" class="hover:text-gray-300">Clientes</a></li>
                         <li class="mb-3"><a href="{{ route('admin.admins.index') }}" class="hover:text-gray-300">Admins</a></li>
                         <li class="mb-3"><a href="{{ route('admin.categories.index') }}" class="hover:text-gray-300">Categorias</a></li>
-                        {{-- <li class="mb-3"><a href="#" class="hover:text-gray-300">Produtos</a></li>
-                        <li class="mb-3"><a href="#" class="hover:text-gray-300">Pedidos</a></li>
+                        <li class="mb-3"><a href="{{ route('admin.products.index') }}" class="hover:text-gray-300">Produtos</a></li>
+                        {{-- <li class="mb-3"><a href="#" class="hover:text-gray-300">Pedidos</a></li>
                         <li class="mb-3"><a href="#" class="hover:text-gray-300">Envios</a></li>  --}}
                     </ul>
                 </nav>

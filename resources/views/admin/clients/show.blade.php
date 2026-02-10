@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Detalhes do Cliente')
 
@@ -76,6 +76,11 @@
         <a href="{{ route('admin.clients.index') }}"
            class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
             Voltar
+        </a>
+
+        <a href="{{ route('admin.clients.edit', $client) }}"
+           class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+            Editar
         </a>
     </div>
 
