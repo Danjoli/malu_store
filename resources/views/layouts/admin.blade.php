@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>@yield('title') | Admin</title>
     @vite('resources/css/app.css')
 </head>
@@ -57,9 +58,7 @@
         <main class="flex-1 p-10 overflow-y-auto h-screen">
 
             {{-- MENSAGENS --}}
-            <div class="container mx-auto px-4 pt-6">
-                @include('includes.messages')
-            </div>
+            @include('includes.alerts')
 
             @yield('content')
 
@@ -68,26 +67,6 @@
     </div>
 
 @stack('scripts')
-
-<script>
-
-    setTimeout(() => {
-
-        const alerts = document.querySelectorAll('.alert');
-
-        alerts.forEach(alert => {
-
-            alert.style.transition = "opacity 0.5s ease";
-
-            alert.style.opacity = "0";
-
-            setTimeout(() => alert.remove(), 500);
-
-        });
-
-    }, 3000);
-
-</script>
 
 </body>
 </html>

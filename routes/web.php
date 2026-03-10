@@ -33,6 +33,18 @@ use App\Http\Controllers\Admin\ShipmentController;
 
 Route::get('/', [ShopController::class, 'index'])->name('shop.index');
 
+Route::get('/policy', function () {
+    return view('public.pages.policy');
+})->name('policy');
+
+Route::get('/terms', function () {
+    return view('public.pages.terms');
+})->name('terms');
+
+Route::get('/privacy', function () {
+    return view('public.pages.privacy');
+})->name('privacy');
+
 Route::get('/product/{id}', [ShopController::class, 'show'])
     ->name('product.show');
 
