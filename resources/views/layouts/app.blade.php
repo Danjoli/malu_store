@@ -18,18 +18,47 @@
                 <a href="/" class="text-gray-700 hover:text-blue-600 transition">
                     Loja
                 </a>
-                <a href="#" class="text-gray-700 hover:text-blue-600 transition">
-                    Contato
-                </a>
                 <a href="{{ route('cart.index') }}" class="text-gray-700 hover:text-blue-600 transition">
                     Carrinho
                 </a>
+
+                @auth
+
+                    <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-blue-600">
+                        Editar conta
+                    </a>
+
+                    <a href="{{ route('profile.orders') }}" class="text-gray-700 hover:text-blue-600">
+                        Ver pedidos
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button class="text-gray-700 hover:text-red-600">
+                            Sair
+                        </button>
+                    </form>
+
+                @else
+
+                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600">
+                        Login
+                    </a>
+
+                @endauth
+
             </nav>
         </div>
     </header>
 
     {{-- CONTEÚDO --}}
     <main class="min-h-screen">
+
+        {{-- MENSAGENS --}}
+        <div class="container mx-auto px-4 pt-6">
+            @include('includes.messages')
+        </div>
+
         @yield('content')
     </main>
 
@@ -70,6 +99,26 @@
     </footer>
 
 @stack('scripts')
+
+<script>
+
+    setTimeout(() => {
+
+        const alerts = document.querySelectorAll('.alert');
+
+        alerts.forEach(alert => {
+
+            alert.style.transition = "opacity 0.5s ease";
+
+            alert.style.opacity = "0";
+
+            setTimeout(() => alert.remove(), 500);
+
+        });
+
+    }, 3000);
+
+</script>
 
 </body>
 </html>

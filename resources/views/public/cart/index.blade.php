@@ -5,74 +5,136 @@
 @section('content')
 <div class="container mx-auto px-6 py-10">
 
-    <h1 class="text-2xl font-bold mb-8">Seu Carrinho</h1>
+    <h1 class="text-3xl font-bold mb-8">Seu Carrinho</h1>
 
+    @if(!$cart || $cart->items->isEmpty())
 
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-white p-10 rounded-2xl shadow text-center">
+            <p class="text-gray-500 text-lg">Seu carrinho está vazio.</p>
+
+            <a href="{{ route('shop.index') }}"
+               class="inline-block mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                Continuar Comprando
+            </a>
+        </div>
+
+    @else
+
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
         <table class="w-full text-left">
-            <thead class="bg-gray-100 text-sm text-gray-600">
+            <thead class="bg-gray-100 text-sm text-gray-600 uppercase">
                 <tr>
-                    <th class="p-4">Produto</th>
-                    <th class="p-4">Preço</th>
-                    <th class="p-4">Quantidade</th>
-                    <th class="p-4">Subtotal</th>
-                    <th class="p-4"></th>
+                    <th class="p-5">Produto</th>
+                    <th class="p-5">Preço</th>
+                    <th class="p-5">Quantidade</th>
+                    <th class="p-5">Subtotal</th>
+                    <th class="p-5 text-center">Ações</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr class="border-t">
-                    <td class="p-4 flex items-center gap-4">
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.C1qfDyEHiU_tuo1zGHP_PgAAAA?cb=defcache2&defcache=1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                                class="w-16 h-16 object-cover rounded-lg">
-                        <span>Teste</span>
+
+                @foreach($cart->items as $item)
+                <tr class="border-t hover:bg-gray-50 transition">
+
+                    {{-- Produto --}}
+                    <td class="p-5 flex items-center gap-4">
+                        <img src="{{ asset('storage/' . $item->image_snapshot) }}"
+                             class="w-20 h-20 object-cover rounded-xl shadow-sm">
+
+                        <div>
+                            <p class="font-semibold text-gray-800">
+                                {{ $item->name_snapshot }}
+                            </p>
+
+                            @if($item->color_snapshot || $item->size_snapshot)
+                                <p class="text-sm text-gray-500 mt-1">
+                                    @if($item->color_snapshot)
+                                        Cor: {{ $item->color_snapshot }}
+                                    @endif
+
+                                    @if($item->size_snapshot)
+                                        | Tamanho: {{ $item->size_snapshot }}
+                                    @endif
+                                </p>
+                            @endif
+                        </div>
                     </td>
 
-                    <td class="p-4">
-                        R$ {{ number_format(100.50, 2, ',', '.') }}
+                    {{-- Preço --}}
+                    <td class="p-5 font-medium text-gray-700">
+                        R$ {{ number_format($item->price, 2, ',', '.') }}
                     </td>
 
-                    <td class="p-4">
-                        <input type="number"
-                                value=100
-                                min="1"
-                                class="quantity w-20 border rounded px-2 py-1">
+                    {{-- Quantidade --}}
+                    <td class="p-5">
+                        <form action="{{ route('cart.update', $item->id) }}" method="POST" class="flex items-center gap-2">
+                            @csrf
+                            @method('PUT')
+
+                            <input type="number"
+                                   name="quantity"
+                                   value="{{ $item->quantity }}"
+                                   min="1"
+                                   class="w-20 border rounded-lg px-2 py-1 text-center">
+
+                            <button type="submit"
+                                    class="text-blue-600 hover:underline text-sm">
+                                Atualizar
+                            </button>
+                        </form>
                     </td>
 
-                    <td class="p-4 subtotal">
-                        R$ {{ number_format(50, 2, ',', '.') }}
+                    {{-- Subtotal --}}
+                    <td class="p-5 font-semibold text-gray-800">
+                        R$ {{ number_format($item->total, 2, ',', '.') }}
                     </td>
 
-                    <td class="p-4">
-                        <button class="remove text-red-600 hover:underline">
-                            Remover
-                        </button>
+                    {{-- Remover --}}
+                    <td class="p-5 text-center">
+                        <form action="{{ route('cart.remove', $item->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit"
+                                    class="text-red-600 hover:underline text-sm">
+                                Remover
+                            </button>
+                        </form>
                     </td>
+
                 </tr>
+                @endforeach
+
             </tbody>
         </table>
     </div>
 
-    {{-- Total --}}
-    <div class="mt-8 flex justify-end">
-        <div class="bg-white p-6 rounded-xl shadow-sm w-80">
-            <div class="flex justify-between mb-4">
-                <span class="font-medium">Total:</span>
-                <span id="cartTotal" class="font-bold text-lg">
-                    R$ {{ number_format(100, 2, ',', '.') }}
+    {{-- Resumo --}}
+    <div class="mt-10 flex justify-end">
+        <div class="bg-white p-8 rounded-2xl shadow w-96">
+
+            <div class="flex justify-between mb-3 text-gray-600">
+                <span>Itens:</span>
+                <span>{{ $cart->total_items }}</span>
+            </div>
+
+            <div class="flex justify-between mb-5 text-xl font-bold">
+                <span>Total:</span>
+                <span class="text-blue-600">
+                    R$ {{ number_format($cart->subtotal, 2, ',', '.') }}
                 </span>
             </div>
 
-            <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
-                <a href="{{ route('checkout') }}">
-                    Finalizar Compra
-                </a>
-            </button>
+            <a href="{{ route('checkout') }}"
+               class="block w-full bg-blue-600 text-white text-center py-3 rounded-xl hover:bg-blue-700 transition font-semibold">
+                Finalizar Compra
+            </a>
+
         </div>
     </div>
 
+    @endif
+
 </div>
 @endsection
-
-
-

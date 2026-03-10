@@ -16,32 +16,41 @@
             Escolha a forma de pagamento
         </h2>
 
-        <div class="space-y-4">
+        <form action="{{ route('payment.confirm', $order->id) }}" method="POST">
 
-            <!-- Cartão -->
-            <label class="flex items-center border p-4 rounded-lg cursor-pointer hover:bg-gray-50">
-                <input type="radio" name="payment" class="mr-3">
-                💳 Cartão de Crédito
-            </label>
+            @csrf
 
-            <!-- Pix -->
-            <label class="flex items-center border p-4 rounded-lg cursor-pointer hover:bg-gray-50">
-                <input type="radio" name="payment" class="mr-3">
-                ⚡ Pix
-            </label>
+            <div class="space-y-4">
 
-            <!-- Boleto -->
-            <label class="flex items-center border p-4 rounded-lg cursor-pointer hover:bg-gray-50">
-                <input type="radio" name="payment" class="mr-3">
-                📄 Boleto
-            </label>
+                <!-- Cartão -->
+                <label class="flex items-center border p-4 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <input type="radio" name="payment_method" value="credit_card" class="mr-3" required>
+                    💳 Cartão de Crédito
+                </label>
 
-        </div>
+                <!-- Pix -->
+                <label class="flex items-center border p-4 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <input type="radio" name="payment_method" value="pix" class="mr-3">
+                    ⚡ Pix
+                </label>
 
-        <a href="{{ route('order.success') }}"
-           class="block text-center mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">
-           Confirmar Pagamento
-        </a>
+                <!-- Boleto -->
+                <label class="flex items-center border p-4 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <input type="radio" name="payment_method" value="boleto" class="mr-3">
+                    📄 Boleto
+                </label>
+
+            </div>
+
+            <button
+                type="submit"
+                class="block w-full text-center mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">
+
+                Confirmar Pagamento
+
+            </button>
+
+        </form>
 
     </div>
 
