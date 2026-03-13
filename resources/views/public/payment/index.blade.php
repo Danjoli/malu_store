@@ -24,7 +24,7 @@
 
                 <!-- Cartão -->
                 <label class="flex items-center border p-4 rounded-lg cursor-pointer hover:bg-gray-50">
-                    <input type="radio" name="payment_method" value="credit_card" class="mr-3" required>
+                    <input type="radio" name="payment_method" value="card" class="mr-3" required>
                     💳 Cartão de Crédito
                 </label>
 

@@ -23,7 +23,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\ShipmentController;
-
+use App\Http\Controllers\Public\PaymentController;
+use App\Http\Controllers\Public\WebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -168,6 +169,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/order/success', function () {
         return view('public.order.success');
     })->name('order.success');
+
+    Route::get('/payment/pix/{order}', [PaymentController::class, 'createPix'])
+    ->name('payment.pix');
+
+    Route::get('/payment/boleto/{order}', [PaymentController::class, 'createBoleto'])
+        ->name('payment.boleto');
+
+    Route::get('/payment/card/{order}', [PaymentController::class, 'createCard'])
+        ->name('payment.card');
+
+    Route::post('/payment/card/{order}', [PaymentController::class, 'processCard'])
+        ->name('payment.card.process');
+
+    Route::post('/webhook/mercadopago', [WebhookController::class, 'mercadopago']);
 
 });
 

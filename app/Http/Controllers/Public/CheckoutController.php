@@ -184,6 +184,53 @@ class CheckoutController extends Controller
 
     /*
     |--------------------------------------------------------------------------
+    | Escolher Método de Pagamento
+    |--------------------------------------------------------------------------
+    */
+
+    // public function confirmPayment(Request $request, $orderId)
+    // {
+
+    //     $request->validate([
+    //         'payment_method' => 'required'
+    //     ]);
+
+    //     $user = Auth::user();
+
+    //     $order = Order::where('user_id', $user->id)
+    //         ->where('id', $orderId)
+    //         ->firstOrFail();
+
+    //     /*
+    //     | Salvar método escolhido
+    //     */
+
+    //     $order->update([
+    //         'payment_method' => $request->payment_method
+    //     ]);
+
+    //     /*
+    //     | Redirecionar para gateway
+    //     */
+
+    //     if ($request->payment_method == 'pix') {
+    //         return redirect()->route('payment.pix', $order->id);
+    //     }
+
+    //     if ($request->payment_method == 'card') {
+    //         return redirect()->route('payment.card', $order->id);
+    //     }
+
+    //     if ($request->payment_method == 'boleto') {
+    //         return redirect()->route('payment.boleto', $order->id);
+    //     }
+
+    //     return redirect()->back()->with('error', 'Método de pagamento inválido.');
+    // }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Confirmar Pagamento
     |--------------------------------------------------------------------------
     */
