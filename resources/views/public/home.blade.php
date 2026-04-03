@@ -8,7 +8,7 @@
         {{-- FILTROS --}}
         @include('public.components.filters')
 
-        <h1 class="text-4xl font-bold mb-8 text-center">Nossos Produtos</h1>
+        <h1 class="text-4xl font-bold mb-8 text-center">Nossos Produtos 1</h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
