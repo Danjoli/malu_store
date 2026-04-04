@@ -48,6 +48,7 @@
                 <!-- INPUTS HIDDEN -->
                 <input type="hidden" name="shipping_cost" id="shipping_cost">
                 <input type="hidden" name="carrier" id="carrier">
+                <input type="hidden" name="service" id="service"> <!-- 🔥 importante -->
 
                 <!-- RESTO DOS CAMPOS -->
                 <div class="mb-4">
@@ -103,12 +104,24 @@
             </h2>
 
             @foreach ($cart->items as $item)
-                <div class="flex justify-between mb-4">
-                    <span>{{ $item->name_snapshot }} (x{{ $item->quantity }})</span>
-                    <span>R$ {{ number_format($item->total, 2, ',', '.') }}</span>
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex gap-3">
+                        <img src="{{ asset('products/' . $item->image_snapshot) }}"
+                            class="w-16 h-16 object-cover rounded-lg border">
+                        <div>
+                            <p class="font-medium">{{ $item->name_snapshot }}</p>
+                            <p class="text-sm text-gray-500">
+                                Qtd: {{ $item->quantity }}
+                            </p>
+                        </div>
+                    </div>
+                    <span class="font-medium">
+                        R$ {{ number_format($item->total, 2, ',', '.') }}
+                    </span>
                 </div>
             @endforeach
 
+            <!-- 🔥 FRETE DINÂMICO -->
             <div class="flex justify-between mb-2 mt-4">
                 <span>Frete</span>
                 <span id="valor-frete">R$ 0,00</span>
@@ -116,9 +129,12 @@
 
             <hr class="my-4">
 
+            <!-- 🔥 TOTAL DINÂMICO -->
             <div class="flex justify-between font-bold text-lg mb-6">
                 <span>Total</span>
-                <span id="valor-total">R$ {{ number_format($total, 2, ',', '.') }}</span>
+                <span id="valor-total">
+                    R$ {{ number_format($total, 2, ',', '.') }}
+                </span>
             </div>
 
             <button type="submit"
@@ -147,6 +163,9 @@ cpfInput.addEventListener('input', function() {
     v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
     this.value = v;
 });
+
+// TOTAL BASE
+const totalBase = {{ $subtotal }};
 
 // CALCULAR FRETE
 document.getElementById('btn-calcular-frete').addEventListener('click', async () => {
@@ -181,7 +200,8 @@ document.getElementById('btn-calcular-frete').addEventListener('click', async ()
                 <div>
                     <input type="radio" name="frete_opcao"
                         value="${frete.price}"
-                        data-carrier="${frete.name}">
+                        data-carrier="${frete.name}"
+                        data-service="${frete.id}">
                     <strong>${frete.name}</strong><br>
                     <small>${frete.delivery_time} dias</small>
                 </div>
@@ -201,12 +221,21 @@ document.addEventListener('change', function(e) {
 
         const valor = parseFloat(e.target.value);
         const carrier = e.target.dataset.carrier;
+        const service = e.target.dataset.service;
 
         document.getElementById('shipping_cost').value = valor;
         document.getElementById('carrier').value = carrier;
+        document.getElementById('service').value = service;
 
+        // Atualiza frete
         document.getElementById('valor-frete').innerText =
             'R$ ' + valor.toFixed(2);
+
+        // Atualiza total
+        const total = totalBase + valor;
+
+        document.getElementById('valor-total').innerText =
+            'R$ ' + total.toFixed(2);
     }
 });
 

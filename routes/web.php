@@ -25,7 +25,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\ShipmentController;
-use App\Http\Controllers\public\FreteController;
+use App\Http\Controllers\Public\FreteController;
 
 /*
 |--------------------------------------------------------------------------
