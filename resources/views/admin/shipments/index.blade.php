@@ -98,10 +98,16 @@
                             @endif
 
                             {{-- ✏️ EDITAR --}}
-                            <a href="{{ route('admin.shipments.edit', $shipment) }}"
-                               class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
-                                Editar
-                            </a>
+                            @if($shipment->status !== 'delivered')
+                                <a href="{{ route('admin.shipments.edit', $shipment) }}"
+                                class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
+                                    Editar
+                                </a>
+                            @else
+                                <span class="bg-gray-300 text-gray-600 px-3 py-1 rounded text-sm cursor-not-allowed">
+                                    Bloqueado
+                                </span>
+                            @endif
 
                         </td>
 
