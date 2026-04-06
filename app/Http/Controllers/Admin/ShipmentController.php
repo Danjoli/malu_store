@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Services\MelhorEnvioService;
+use Illuminate\Support\Facades\Http;
 
 class ShipmentController extends Controller
 {
-    // 📦 LISTAR ENVIOS
+    /*
+    |----------------------------------------------------------------------
+    | 📦 LISTAR ENVIOS
+    |----------------------------------------------------------------------
+    */
     public function index()
     {
         $shipments = Shipment::with('order.user')
@@ -19,13 +24,21 @@ class ShipmentController extends Controller
         return view('admin.shipments.index', compact('shipments'));
     }
 
-    // ✏️ EDITAR
+    /*
+    |----------------------------------------------------------------------
+    | ✏️ EDITAR
+    |----------------------------------------------------------------------
+    */
     public function edit(Shipment $shipment)
     {
         return view('admin.shipments.edit', compact('shipment'));
     }
 
-    // 🔄 ATUALIZAR
+    /*
+    |----------------------------------------------------------------------
+    | 🔄 ATUALIZAR
+    |----------------------------------------------------------------------
+    */
     public function update(Request $request, Shipment $shipment)
     {
         // 🔒 trava envios finalizados
@@ -47,7 +60,11 @@ class ShipmentController extends Controller
             ->with('success', 'Envio atualizado!');
     }
 
-    // 🚀 GERAR ETIQUETA
+    /*
+    |----------------------------------------------------------------------
+    | 🚀 GERAR ETIQUETA
+    |----------------------------------------------------------------------
+    */
     public function gerarEtiqueta($id, MelhorEnvioService $service)
     {
         $shipment = Shipment::with('order.items', 'order.address', 'order.user')
@@ -72,35 +89,32 @@ class ShipmentController extends Controller
 
         try {
 
-            // 📦 PAYLOAD CORRETO
+            // 📦 PAYLOAD
             $data = [
                 "service" => $shipment->shipment_id,
-
                 "from" => [
                     "name" => "Sua Loja",
                     "phone" => "11999999999",
                     "email" => "contato@sualoja.com",
-                    "document" => "02899542400", // 🔥 CNPJ OU CPF DA SUA LOJA
+                    "document" => "02899542400",
                     "address" => "Rua Origem",
                     "number" => "100",
                     "city" => "São Paulo",
                     "state_abbr" => "SP",
                     "postal_code" => "01010000"
                 ],
-
                 "to" => [
                     "name" => $order->address->recipient_name,
                     "phone" => $order->address->phone,
                     "email" => $order->user->email,
-                    "document" => preg_replace('/\D/', '', $order->address->cpf), // 🔥 FIX
+                    "document" => preg_replace('/\D/', '', $order->address->cpf),
                     "address" => $order->address->street,
                     "number" => $order->address->number,
                     "district" => $order->address->neighborhood,
                     "city" => $order->address->city,
                     "state_abbr" => $order->address->state,
-                    "postal_code" => $order->address->cep
+                    "postal_code" => preg_replace('/\D/', '', $order->address->cep)
                 ],
-
                 "products" => $order->items->map(function ($item) {
                     return [
                         "name" => $item->name_snapshot,
@@ -108,8 +122,6 @@ class ShipmentController extends Controller
                         "unitary_value" => (float) $item->price
                     ];
                 })->toArray(),
-
-                // 🔥 ESSENCIAL
                 "volumes" => [
                     [
                         "weight" => 0.3,
@@ -120,36 +132,55 @@ class ShipmentController extends Controller
                 ]
             ];
 
-            // 🛒 adicionar ao carrinho
+            // 🛒 ADICIONAR AO CARRINHO
             $cart = $service->adicionarAoCarrinho($data);
 
             if (!isset($cart['id'])) {
-                dd($cart);
+                \Log::error('Erro carrinho Melhor Envio', $cart);
+                return back()->with('error', 'Erro ao adicionar ao carrinho.');
             }
 
             $cartId = $cart['id'];
 
-            // 💳 comprar etiqueta
-            $checkout = $service->comprarEtiqueta([
+            // 💳 COMPRAR ETIQUETA
+            $service->comprarEtiqueta([
                 "orders" => [$cartId]
             ]);
 
-            // 🔍 debug resposta
-            \Log::info('Melhor Envio checkout', $checkout);
+            // 🔥 GERAR ETIQUETA
+            $service->gerarEtiqueta([
+                "orders" => [$cartId]
+            ]);
 
-            // 📌 atualizar banco
+            // ⏳ Pequena pausa pra API gerar tracking
+            sleep(2);
+
+            // 📦 PEGAR DADOS ATUALIZADOS DO ENVIO
+            $detalhes = Http::withToken(config('services.melhor_envio.token'))
+                ->get(config('services.melhor_envio.url') . "shipment/{$cartId}")
+                ->json();
+
+            \Log::info('Detalhes do envio', $detalhes);
+
+            // 🔥 SALVAR NO BANCO
             $shipment->update([
-                'tracking_code' => $checkout['tracking'] ?? null,
+                'tracking_code' => $detalhes['tracking']
+                    ?? $detalhes['tracking_code']
+                    ?? $detalhes['protocol']
+                    ?? null,
+
+                'label_url' => $detalhes['labels'][0]['url']
+                    ?? null,
+
                 'status' => 'shipped',
-                'shipped_at' => now(),
-                'label_url' => $checkout['label'] ?? null // 🔥 PDF
+                'shipped_at' => now()
             ]);
 
             return back()->with('success', 'Etiqueta gerada com sucesso!');
 
         } catch (\Exception $e) {
 
-            \Log::error('Erro ao gerar etiqueta', [
+            \Log::error('Erro geral envio', [
                 'message' => $e->getMessage()
             ]);
 
