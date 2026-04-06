@@ -9,7 +9,7 @@ use App\Services\MelhorEnvioService;
 
 class ShipmentController extends Controller
 {
-    // 📦 LISTAR
+    // 📦 LISTAR ENVIOS
     public function index()
     {
         $shipments = Shipment::with('order.user')
@@ -28,8 +28,9 @@ class ShipmentController extends Controller
     // 🔄 ATUALIZAR
     public function update(Request $request, Shipment $shipment)
     {
+        // 🔒 trava envios finalizados
         if (in_array($shipment->status, ['delivered', 'cancelled'])) {
-            return back()->with('error', 'Envio bloqueado.');
+            return back()->with('error', 'Este envio não pode mais ser alterado.');
         }
 
         $request->validate([
@@ -54,21 +55,24 @@ class ShipmentController extends Controller
 
         $order = $shipment->order;
 
+        // 🔒 evitar duplicação
         if ($shipment->tracking_code) {
-            return back()->with('error', 'Etiqueta já gerada.');
+            return back()->with('error', 'Etiqueta já foi gerada!');
         }
 
+        // 🔒 só após pagamento
         if ($order->status !== 'paid') {
-            return back()->with('error', 'Pedido não pago.');
+            return back()->with('error', 'Pedido ainda não foi pago.');
         }
 
+        // 🔒 validar CPF
         if (!$order->address->cpf) {
-            return back()->with('error', 'CPF do cliente obrigatório.');
+            return back()->with('error', 'CPF do destinatário não informado.');
         }
 
         try {
 
-            // 📦 PAYLOAD
+            // 📦 PAYLOAD CORRETO
             $data = [
                 "service" => $shipment->shipment_id,
 
@@ -76,7 +80,7 @@ class ShipmentController extends Controller
                     "name" => "Sua Loja",
                     "phone" => "11999999999",
                     "email" => "contato@sualoja.com",
-                    "document" => "02899542400",
+                    "document" => "02899542400", // 🔥 CNPJ OU CPF DA SUA LOJA
                     "address" => "Rua Origem",
                     "number" => "100",
                     "city" => "São Paulo",
@@ -88,13 +92,13 @@ class ShipmentController extends Controller
                     "name" => $order->address->recipient_name,
                     "phone" => $order->address->phone,
                     "email" => $order->user->email,
-                    "document" => preg_replace('/\D/', '', $order->address->cpf),
+                    "document" => preg_replace('/\D/', '', $order->address->cpf), // 🔥 FIX
                     "address" => $order->address->street,
                     "number" => $order->address->number,
                     "district" => $order->address->neighborhood,
                     "city" => $order->address->city,
                     "state_abbr" => $order->address->state,
-                    "postal_code" => preg_replace('/\D/', '', $order->address->cep)
+                    "postal_code" => $order->address->cep
                 ],
 
                 "products" => $order->items->map(function ($item) {
@@ -105,6 +109,7 @@ class ShipmentController extends Controller
                     ];
                 })->toArray(),
 
+                // 🔥 ESSENCIAL
                 "volumes" => [
                     [
                         "weight" => 0.3,
@@ -119,8 +124,7 @@ class ShipmentController extends Controller
             $cart = $service->adicionarAoCarrinho($data);
 
             if (!isset($cart['id'])) {
-                \Log::error('Erro carrinho Melhor Envio', $cart);
-                return back()->with('error', 'Erro ao adicionar ao carrinho.');
+                dd($cart);
             }
 
             $cartId = $cart['id'];
@@ -130,30 +134,26 @@ class ShipmentController extends Controller
                 "orders" => [$cartId]
             ]);
 
-            if (!isset($checkout[0])) {
-                \Log::error('Erro checkout Melhor Envio', $checkout);
-                return back()->with('error', 'Erro ao comprar etiqueta.');
-            }
+            // 🔍 debug resposta
+            \Log::info('Melhor Envio checkout', $checkout);
 
-            $etiqueta = $checkout[0];
-
-            // 📌 salvar no banco
+            // 📌 atualizar banco
             $shipment->update([
-                'tracking_code' => $etiqueta['tracking'] ?? null,
-                'label_url' => $etiqueta['labels'][0]['url'] ?? null,
+                'tracking_code' => $checkout['tracking'] ?? null,
                 'status' => 'shipped',
-                'shipped_at' => now()
+                'shipped_at' => now(),
+                'label_url' => $checkout['label'] ?? null // 🔥 PDF
             ]);
 
             return back()->with('success', 'Etiqueta gerada com sucesso!');
 
         } catch (\Exception $e) {
 
-            \Log::error('Erro geral envio', [
+            \Log::error('Erro ao gerar etiqueta', [
                 'message' => $e->getMessage()
             ]);
 
-            return back()->with('error', 'Erro: ' . $e->getMessage());
+            return back()->with('error', 'Erro ao gerar etiqueta: ' . $e->getMessage());
         }
     }
 }
