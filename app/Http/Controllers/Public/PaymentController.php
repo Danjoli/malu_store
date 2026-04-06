@@ -284,4 +284,56 @@ class PaymentController extends Controller
             ], 500);
         }
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | STATUS DO PAGAMENTO
+    |--------------------------------------------------------------------------
+    */
+    public function status($orderId)
+    {
+        $order = Order::findOrFail($orderId);
+
+        if ($order->expires_at && now()->greaterThan($order->expires_at) &&
+            !in_array($order->status, ['paid', 'cancelled'])
+        ) {
+            $order->update([
+                'status' => 'expired',
+                'gateway_status' => 'expired'
+            ]);
+            $order->status = 'expired';
+        }
+
+        return response()->json(['status' => $order->status]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESULTADOS
+    |--------------------------------------------------------------------------
+    */
+    public function success($orderId)
+    {
+        $order = Order::find($orderId);
+
+        if (!$order || $order->status !== 'paid') {
+            return redirect('/')->with('error', 'Pagamento não confirmado.');
+        }
+
+        return view('public.payment.result.success', compact('order'));
+    }
+
+    public function error($orderId, Request $request)
+    {
+        $order = Order::find($orderId);
+
+        if (!$order) {
+            return redirect('/')->with('error', 'Pedido não encontrado.');
+        }
+
+        $reason = $request->query('reason', 'failed');
+
+        return view('public.payment.result.error', compact('order', 'reason'));
+    }
 }
