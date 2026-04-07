@@ -88,7 +88,7 @@ class ShipmentController extends Controller
         }
 
         try {
-            // 📦 PAYLOAD
+            // 📦 PAYLOAD para adicionar ao carrinho
             $data = [
                 "service" => $shipment->shipment_id,
                 "from" => [
@@ -146,23 +146,30 @@ class ShipmentController extends Controller
                 "orders" => [$cartId]
             ]);
 
-            // 🔑 Pegar dados do primeiro pedido do retorno
-            $orderData = $purchase['purchase']['orders'][0] ?? null;
+            $orderData = $purchase['purchase']['orders'][0] ?? $purchase['orders'][0] ?? null;
 
             if (!$orderData) {
                 \Log::error('Erro ao obter dados do pedido comprado', $purchase);
                 return back()->with('error', 'Não foi possível obter dados do pedido.');
             }
 
+            // 🔹 Determinar tracking_code
+            $trackingCode = $orderData['tracking']
+                            ?? $orderData['tracking_code']
+                            ?? $orderData['protocol']
+                            ?? null;
+
+            // 🔹 Determinar label_url
+            $labelUrl = $orderData['labels'][0]['url']
+                        ?? $orderData['label_url']
+                        ?? $orderData['label_pdf']
+                        ?? $orderData['service']['company']['tracking_link']
+                        ?? null;
+
             // 🔥 SALVAR NO BANCO
             $shipment->update([
-                'tracking_code' => $orderData['tracking']
-                                   ?? $orderData['tracking_code']
-                                   ?? $orderData['protocol']
-                                   ?? null,
-
-                'label_url' => $orderData['labels'][0]['url'] ?? null,
-
+                'tracking_code' => $trackingCode,
+                'label_url' => $labelUrl,
                 'status' => 'shipped',
                 'shipped_at' => now()
             ]);
@@ -171,7 +178,8 @@ class ShipmentController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Erro geral envio', [
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'stack' => $e->getTraceAsString()
             ]);
 
             return back()->with('error', 'Erro ao gerar etiqueta: ' . $e->getMessage());
