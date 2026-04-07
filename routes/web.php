@@ -248,6 +248,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 |--------------------------------------------------------------------------
 */
 
+Route::post('/webhook/melhor-envio', [ShipmentController::class, 'webhook'])
+    ->name('webhook.melhor-envio');
+    
 Route::prefix('admin')
     ->name('admin.')
     ->middleware('auth:admin')
