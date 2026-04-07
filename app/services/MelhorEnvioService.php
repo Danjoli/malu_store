@@ -43,4 +43,9 @@ class MelhorEnvioService {
     {
         return $this->request('shipment/generate', $data);
     }
+
+    public function consultarPedido($shipmentId)
+    {
+        return $this->request("shipment/{$shipmentId}", [], 'GET');
+    }
 }

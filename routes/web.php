@@ -282,7 +282,7 @@ Route::prefix('admin')
 
         // Atualizar status manual
         Route::post('shipments/{shipment}/atualizar-status', [ShipmentController::class, 'atualizarStatus'])
-            ->name('admin.shipments.atualizarStatus');
+            ->name('shipments.atualizarStatus');
     });
 
     /*
