@@ -36,6 +36,8 @@ use App\Http\Controllers\Public\FreteController;
 Route::post('/webhook/mercadopago', [WebhookController::class, 'mercadopago'])
     ->name('webhook.mercadopago');
 
+Route::post('/webhook/melhor-envio', [ShipmentController::class, 'webhook'])
+    ->name('webhook.melhor-envio');
 
 /*
 |--------------------------------------------------------------------------
@@ -247,9 +249,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 | ÁREA ADMINISTRATIVA
 |--------------------------------------------------------------------------
 */
-
-Route::post('/webhook/melhor-envio', [ShipmentController::class, 'webhook'])
-    ->name('webhook.melhor-envio');
 
 Route::prefix('admin')
     ->name('admin.')
