@@ -12,7 +12,7 @@ class ShipmentController extends Controller
 {
     /*
     |----------------------------------------------------------------------
-    | 📦 LISTAR ENVIOS
+    | LISTAR ENVIOS
     |----------------------------------------------------------------------
     */
     public function index()
@@ -23,7 +23,7 @@ class ShipmentController extends Controller
 
     /*
     |----------------------------------------------------------------------
-    | ✏️ EDITAR
+    | EDITAR
     |----------------------------------------------------------------------
     */
     public function edit(Shipment $shipment)
@@ -33,7 +33,7 @@ class ShipmentController extends Controller
 
     /*
     |----------------------------------------------------------------------
-    | 🔄 ATUALIZAR
+    | ATUALIZAR
     |----------------------------------------------------------------------
     */
     public function update(Request $request, Shipment $shipment)
@@ -58,7 +58,7 @@ class ShipmentController extends Controller
 
     /*
     |----------------------------------------------------------------------
-    | 🚀 GERAR ETIQUETA
+    | GERAR ETIQUETA
     |----------------------------------------------------------------------
     */
     public function gerarEtiqueta($id, MelhorEnvioService $service)
@@ -175,7 +175,7 @@ class ShipmentController extends Controller
 
     /*
     |----------------------------------------------------------------------
-    | 🔄 ATUALIZAR STATUS MANUAL
+    | ATUALIZAR STATUS MANUAL
     |----------------------------------------------------------------------
     */
     public function atualizarStatus($id, MelhorEnvioService $service)
@@ -212,7 +212,7 @@ class ShipmentController extends Controller
 
     /*
     |----------------------------------------------------------------------
-    | 🌐 WEBHOOK
+    | WEBHOOK
     |----------------------------------------------------------------------
     */
     public function webhook(Request $request)
