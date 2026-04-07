@@ -17,10 +17,7 @@ class ShipmentController extends Controller
     */
     public function index()
     {
-        $shipments = Shipment::with('order.user')
-            ->latest()
-            ->get();
-
+        $shipments = Shipment::with('order.user')->latest()->get();
         return view('admin.shipments.index', compact('shipments'));
     }
 
@@ -41,7 +38,6 @@ class ShipmentController extends Controller
     */
     public function update(Request $request, Shipment $shipment)
     {
-        // 🔒 trava envios finalizados
         if (in_array($shipment->status, ['delivered', 'cancelled'])) {
             return back()->with('error', 'Este envio não pode mais ser alterado.');
         }
@@ -72,23 +68,19 @@ class ShipmentController extends Controller
 
         $order = $shipment->order;
 
-        // 🔒 evitar duplicação
         if ($shipment->tracking_code) {
             return back()->with('error', 'Etiqueta já foi gerada!');
         }
 
-        // 🔒 só após pagamento
         if ($order->status !== 'paid') {
             return back()->with('error', 'Pedido ainda não foi pago.');
         }
 
-        // 🔒 validar CPF
         if (!$order->address->cpf) {
             return back()->with('error', 'CPF do destinatário não informado.');
         }
 
         try {
-            // 📦 PAYLOAD para adicionar ao carrinho
             $data = [
                 "service" => $shipment->shipment_id,
                 "from" => [
@@ -131,7 +123,6 @@ class ShipmentController extends Controller
                 ]
             ];
 
-            // 🛒 ADICIONAR AO CARRINHO
             $cart = $service->adicionarAoCarrinho($data);
 
             if (!isset($cart['id'])) {
@@ -141,7 +132,6 @@ class ShipmentController extends Controller
 
             $cartId = $cart['id'];
 
-            // 💳 COMPRAR ETIQUETA
             $purchase = $service->comprarEtiqueta([
                 "orders" => [$cartId]
             ]);
@@ -153,20 +143,17 @@ class ShipmentController extends Controller
                 return back()->with('error', 'Não foi possível obter dados do pedido.');
             }
 
-            // 🔹 Determinar tracking_code
             $trackingCode = $orderData['tracking']
                             ?? $orderData['tracking_code']
                             ?? $orderData['protocol']
                             ?? null;
 
-            // 🔹 Determinar label_url
             $labelUrl = $orderData['labels'][0]['url']
                         ?? $orderData['label_url']
                         ?? $orderData['label_pdf']
                         ?? $orderData['service']['company']['tracking_link']
                         ?? null;
 
-            // 🔥 SALVAR NO BANCO
             $shipment->update([
                 'tracking_code' => $trackingCode,
                 'label_url' => $labelUrl,
@@ -186,49 +173,77 @@ class ShipmentController extends Controller
         }
     }
 
+    /*
+    |----------------------------------------------------------------------
+    | 🔄 ATUALIZAR STATUS MANUAL
+    |----------------------------------------------------------------------
+    */
+    public function atualizarStatus($id, MelhorEnvioService $service)
+    {
+        $shipment = Shipment::findOrFail($id);
+
+        if (!$shipment->shipment_id) {
+            return back()->with('error', 'Envio ainda não foi gerado na Melhor Envio.');
+        }
+
+        try {
+            $orderData = $service->consultarPedido($shipment->shipment_id);
+
+            $status = $orderData['status'] ?? $shipment->status;
+
+            $shipment->update([
+                'status' => $status,
+                'shipped_at' => $status === 'shipped' ? now() : $shipment->shipped_at,
+                'delivered_at' => $status === 'delivered' ? now() : $shipment->delivered_at,
+                'tracking_code' => $orderData['tracking_code'] ?? $shipment->tracking_code
+            ]);
+
+            return back()->with('success', 'Status atualizado manualmente!');
+
+        } catch (\Exception $e) {
+            \Log::error('Erro ao atualizar status', [
+                'message' => $e->getMessage(),
+                'stack' => $e->getTraceAsString()
+            ]);
+
+            return back()->with('error', 'Não foi possível atualizar o status.');
+        }
+    }
+
+    /*
+    |----------------------------------------------------------------------
+    | 🌐 WEBHOOK
+    |----------------------------------------------------------------------
+    */
     public function webhook(Request $request)
     {
-        // 🔒 Validar token do webhook
         $tokenEsperado = config('services.melhor_envio.webhook_token');
         if ($request->header('Authorization') !== 'Bearer ' . $tokenEsperado) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // 🔎 Log do payload recebido
         \Log::info('Webhook Melhor Envio recebido', $request->all());
 
         $data = $request->all();
 
         if (isset($data['orders']) && count($data['orders']) > 0) {
             foreach ($data['orders'] as $orderData) {
-
-                // 🔑 Localizar envio pelo tracking_code
                 $tracking = $orderData['tracking'] ?? null;
                 if (!$tracking) continue;
 
                 $shipment = Shipment::where('tracking_code', $tracking)->first();
                 if (!$shipment) continue;
 
-                // 🔄 Atualizar status e datas
                 $status = $orderData['status'] ?? $shipment->status;
                 $updateData = ['status' => $status];
 
-                if ($status === 'shipped') {
-                    $updateData['shipped_at'] = now();
-                }
-
-                if ($status === 'delivered') {
-                    $updateData['delivered_at'] = now();
-                }
-
-                // Atualiza tracking caso tenha sido alterado
-                if (isset($orderData['tracking_code'])) {
-                    $updateData['tracking_code'] = $orderData['tracking_code'];
-                }
+                if ($status === 'shipped') $updateData['shipped_at'] = now();
+                if ($status === 'delivered') $updateData['delivered_at'] = now();
+                if (isset($orderData['tracking_code'])) $updateData['tracking_code'] = $orderData['tracking_code'];
 
                 $shipment->update($updateData);
 
-                // 📩 Notificar cliente (opcional)
+                // Notificar cliente
                 if (in_array($status, ['shipped','delivered'])) {
                     $user = $shipment->order->user;
                     \Mail::to($user->email)->queue(new \App\Mail\ShipmentStatusUpdated($shipment));
