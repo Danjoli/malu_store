@@ -240,13 +240,13 @@ class ShipmentController extends Controller
         $data = $request->input('data');
 
         if (!$data) {
-            return response()->json(['error' => 'Payload inválido'], 400);
+            return response()->json(['ok' => true], 200);
         }
 
         $shipment = Shipment::where('shipment_id', $data['id'])->first();
 
         if (!$shipment) {
-            return response()->json(['error' => 'Shipment não encontrado'], 404);
+            return response()->json(['ok' => true], 200);
         }
 
         $apiStatus = $data['status'] ?? null;
