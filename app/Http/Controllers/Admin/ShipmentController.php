@@ -81,7 +81,7 @@ class ShipmentController extends Controller
 
         try {
             $data = [
-                "service" => $shipment->shipment_id,
+                "service" => $shipment->shipment_id, // ⚠️ ideal vir da cotação
                 "from" => [
                     "name" => "Sua Loja",
                     "phone" => "11999999999",
@@ -122,6 +122,7 @@ class ShipmentController extends Controller
                 ]
             ];
 
+            // 1. Adicionar ao carrinho
             $cart = $service->adicionarAoCarrinho($data);
 
             if (!isset($cart['id'])) {
@@ -129,20 +130,34 @@ class ShipmentController extends Controller
                 return back()->with('error', 'Erro ao adicionar ao carrinho.');
             }
 
+            // 2. Comprar etiqueta
             $purchase = $service->comprarEtiqueta([
                 "orders" => [$cart['id']]
             ]);
 
-            $orderData = $purchase['purchase']['orders'][0] ?? $purchase['orders'][0] ?? null;
-
-            if (!$orderData) {
-                \Log::error('Erro ao obter dados do pedido comprado', ['response' => $purchase]);
-                return back()->with('error', 'Não foi possível obter dados do pedido.');
+            if (!isset($purchase['purchase'])) {
+                \Log::error('Erro na compra', ['response' => $purchase]);
+                return back()->with('error', 'Erro ao comprar etiqueta.');
             }
 
+            // 3. GERAR etiqueta (🔥 ESSA PARTE QUE FALTAVA)
+            $generate = $service->gerarEtiqueta([
+                "orders" => [$cart['id']]
+            ]);
+
+            // 4. Pegar dados finais
+            $orderData = $generate['orders'][0] ?? null;
+
+            if (!$orderData) {
+                \Log::error('Erro ao gerar etiqueta', ['response' => $generate]);
+                return back()->with('error', 'Erro ao gerar etiqueta.');
+            }
+
+            // 5. Atualizar banco
             $shipment->update([
-                'tracking_code' => $orderData['tracking'] ?? $orderData['tracking_code'] ?? null,
-                'label_url' => $orderData['labels'][0]['url'] ?? $orderData['label_url'] ?? null,
+                'shipment_id' => $orderData['id'] ?? $shipment->shipment_id,
+                'tracking_code' => $orderData['tracking'] ?? null,
+                'label_url' => $orderData['labels'][0]['url'] ?? null,
                 'status' => 'shipped',
                 'shipped_at' => now()
             ]);
