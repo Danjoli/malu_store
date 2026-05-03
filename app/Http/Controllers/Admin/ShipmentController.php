@@ -81,7 +81,7 @@ class ShipmentController extends Controller
 
         try {
             $data = [
-                "service" => $shipment->shipment_id, // ⚠️ ideal vir da cotação
+                "service" => $shipment->service_id, // ⚠️ ideal vir da cotação
                 "from" => [
                     "name" => "Sua Loja",
                     "phone" => "11999999999",
