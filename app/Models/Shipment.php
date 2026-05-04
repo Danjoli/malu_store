@@ -12,6 +12,7 @@ class Shipment extends Model
         'carrier',
         'tracking_code',
         'shipping_cost',
+        'service_id',
         'status',
         'label_url',
         'last_update',     // ✅ NOVO (status detalhado)
