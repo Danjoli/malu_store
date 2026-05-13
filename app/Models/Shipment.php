@@ -24,7 +24,7 @@ class Shipment extends Model
         'shipping_cost' => 'decimal:2',
         'shipped_at' => 'datetime',
         'delivered_at' => 'datetime',
-    ];
+];
 
     public function order()
     {
