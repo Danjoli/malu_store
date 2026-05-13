@@ -222,41 +222,62 @@ class ShipmentController extends Controller
             ]);
 
             /*
-            |----------------------------------------------------------------------
-            | 6. EXTRAIR DADOS
-            |----------------------------------------------------------------------
+            |--------------------------------------------------------------------------
+            | 6. EXTRAIR DADOS DA API
+            |--------------------------------------------------------------------------
             */
-            $trackingCode = $orderData['tracking'] ?? null;
 
-            $labelUrl =
-                $orderData['label'] ??
-                ($orderData['labels'][0]['url'] ?? null);
-
-            $apiStatus = $orderData['status'] ?? 'generated';
+            $trackingCode = null;
+            $labelUrl = null;
 
             /*
-            |----------------------------------------------------------------------
+            |--------------------------------------------------------------------------
+            | TRACKING
+            |--------------------------------------------------------------------------
+            */
+            if (isset($orderData['tracking'])) {
+                $trackingCode = $orderData['tracking'];
+            }
+
+            if (isset($orderData['tracking_code'])) {
+                $trackingCode = $orderData['tracking_code'];
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | LABEL
+            |--------------------------------------------------------------------------
+            */
+            if (isset($orderData['labels'][0]['url'])) {
+                $labelUrl = $orderData['labels'][0]['url'];
+            }
+
+            if (isset($orderData['label'])) {
+                $labelUrl = $orderData['label'];
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | DEBUG
+            |--------------------------------------------------------------------------
+            */
+            \Log::info('Dados extraidos etiqueta', [
+                'tracking' => $trackingCode,
+                'label' => $labelUrl,
+                'api_response' => $orderData
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
             | 7. ATUALIZAR BANCO
-            |----------------------------------------------------------------------
+            |--------------------------------------------------------------------------
             */
             $shipment->update([
-
-                // ID REAL DO PEDIDO NO MELHOR ENVIO
                 'shipment_id' => $cart['id'],
-
-                // RASTREIO
                 'tracking_code' => $trackingCode,
-
-                // URL PDF ETIQUETA
                 'label_url' => $labelUrl,
-
-                // STATUS
-                'status' => $this->mapStatus($apiStatus) ?? 'shipped',
-
-                // DATA ENVIO
+                'status' => 'shipped',
                 'shipped_at' => now(),
-
-                // DEBUG
                 'last_update' => json_encode($orderData)
             ]);
 
