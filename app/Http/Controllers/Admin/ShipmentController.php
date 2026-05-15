@@ -296,6 +296,7 @@ class ShipmentController extends Controller
         $shipment = Shipment::findOrFail($id);
 
         if (!$shipment->shipment_id) {
+
             return back()->with(
                 'error',
                 'Envio não existe na Melhor Envio.'
@@ -304,15 +305,20 @@ class ShipmentController extends Controller
 
         try {
 
-            $orderData = $service->consultarPedido(
+            /*
+            |----------------------------------------------------------------------
+            | CONSULTAR TRACKING
+            |----------------------------------------------------------------------
+            */
+            $response = $service->consultarPedido(
                 $shipment->shipment_id
             );
 
             \Log::info('Resposta API Melhor Envio', [
-                'data' => $orderData
+                'data' => $response
             ]);
 
-            if (!$orderData || isset($orderData['message'])) {
+            if (!$response || isset($response['message'])) {
 
                 return back()->with(
                     'error',
@@ -320,23 +326,66 @@ class ShipmentController extends Controller
                 );
             }
 
-            $apiStatus = $orderData['status'] ?? null;
+            /*
+            |----------------------------------------------------------------------
+            | PEGAR PRIMEIRO ITEM DO ARRAY
+            |----------------------------------------------------------------------
+            */
+            $trackingData = current($response);
+
+            if (!$trackingData) {
+
+                return back()->with(
+                    'error',
+                    'Tracking não encontrado.'
+                );
+            }
+
+            /*
+            |----------------------------------------------------------------------
+            | STATUS API
+            |----------------------------------------------------------------------
+            */
+            $apiStatus = $trackingData['status'] ?? null;
 
             $status = $this->mapStatus($apiStatus)
                 ?? $shipment->status;
 
+            /*
+            |----------------------------------------------------------------------
+            | TRACKING
+            |----------------------------------------------------------------------
+            */
+            $trackingCode =
+                $trackingData['tracking']
+                ?? $shipment->tracking_code;
+
+            /*
+            |----------------------------------------------------------------------
+            | LABEL URL
+            |----------------------------------------------------------------------
+            */
+            $labelUrl = $shipment->label_url;
+
+            if (!empty($trackingData['generated_at'])) {
+
+                $labelUrl =
+                    "https://sandbox.melhorenvio.com.br/painel/etiquetas/"
+                    . $shipment->shipment_id;
+            }
+
+            /*
+            |----------------------------------------------------------------------
+            | ATUALIZAR BANCO
+            |----------------------------------------------------------------------
+            */
             $shipment->update([
 
                 'status' => $status,
 
-                'tracking_code' =>
-                    $orderData['tracking']
-                    ?? $shipment->tracking_code,
+                'tracking_code' => $trackingCode,
 
-                'label_url' =>
-                    $orderData['label']
-                    ?? ($orderData['labels'][0]['url']
-                    ?? $shipment->label_url),
+                'label_url' => $labelUrl,
 
                 'shipped_at' =>
                     $apiStatus === 'posted'
@@ -348,7 +397,7 @@ class ShipmentController extends Controller
                         ? now()
                         : $shipment->delivered_at,
 
-                'last_update' => json_encode($orderData)
+                'last_update' => json_encode($trackingData)
             ]);
 
             return back()->with(
