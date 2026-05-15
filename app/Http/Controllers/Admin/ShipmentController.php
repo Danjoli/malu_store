@@ -212,65 +212,47 @@ class ShipmentController extends Controller
 
             /*
             |----------------------------------------------------------------------
-            | 5. CONSULTAR PEDIDO
+            | 5. CONSULTAR TRACKING
             |----------------------------------------------------------------------
             */
-            $orderData = $service->consultarPedido($cart['id']);
+            $trackingResponse = $service->consultarPedido($cart['id']);
 
-            \Log::info('Consulta pedido', [
-                'response' => $orderData
+            \Log::info('Consulta tracking', [
+                'response' => $trackingResponse
             ]);
 
             /*
-            |--------------------------------------------------------------------------
-            | 6. EXTRAIR DADOS DA API
-            |--------------------------------------------------------------------------
+            |----------------------------------------------------------------------
+            | 6. EXTRAIR DADOS
+            |----------------------------------------------------------------------
             */
 
-            $trackingCode = null;
-            $labelUrl = null;
+            $trackingData = current($trackingResponse);
+
+            $trackingCode = $trackingData['tracking'] ?? null;
 
             /*
-            |--------------------------------------------------------------------------
-            | TRACKING
-            |--------------------------------------------------------------------------
+            |----------------------------------------------------------------------
+            | LABEL URL
+            |----------------------------------------------------------------------
             */
-            if (isset($orderData['tracking'])) {
-                $trackingCode = $orderData['tracking'];
-            }
-
-            if (isset($orderData['tracking_code'])) {
-                $trackingCode = $orderData['tracking_code'];
-            }
+            $labelUrl = "https://sandbox.melhorenvio.com.br/painel/etiquetas/" . $cart['id'];
 
             /*
-            |--------------------------------------------------------------------------
-            | LABEL
-            |--------------------------------------------------------------------------
-            */
-            if (isset($orderData['labels'][0]['url'])) {
-                $labelUrl = $orderData['labels'][0]['url'];
-            }
-
-            if (isset($orderData['label'])) {
-                $labelUrl = $orderData['label'];
-            }
-
-            /*
-            |--------------------------------------------------------------------------
+            |----------------------------------------------------------------------
             | DEBUG
-            |--------------------------------------------------------------------------
+            |----------------------------------------------------------------------
             */
             \Log::info('Dados extraidos etiqueta', [
                 'tracking' => $trackingCode,
                 'label' => $labelUrl,
-                'api_response' => $orderData
+                'api_response' => $trackingData
             ]);
 
             /*
-            |--------------------------------------------------------------------------
+            |----------------------------------------------------------------------
             | 7. ATUALIZAR BANCO
-            |--------------------------------------------------------------------------
+            |----------------------------------------------------------------------
             */
             $shipment->update([
                 'shipment_id' => $cart['id'],
@@ -278,7 +260,7 @@ class ShipmentController extends Controller
                 'label_url' => $labelUrl,
                 'status' => 'shipped',
                 'shipped_at' => now(),
-                'last_update' => json_encode($orderData)
+                'last_update' => json_encode($trackingData)
             ]);
 
             return back()->with(
