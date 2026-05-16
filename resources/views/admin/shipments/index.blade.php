@@ -76,7 +76,7 @@
                         <td class="p-3 text-right space-x-2">
 
                             {{-- Gerar Etiqueta --}}
-                            @if(!$shipment->shipment_id && $shipment->order->status == 'paid')
+                            @if(!$shipment->tracking_code && $shipment->order->status == 'paid')
                                 <form action="{{ route('admin.shipments.gerar', $shipment->id) }}"
                                       method="POST" class="inline">
                                     @csrf
