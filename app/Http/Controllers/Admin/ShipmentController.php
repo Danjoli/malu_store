@@ -273,9 +273,15 @@ class ShipmentController extends Controller
             | LABEL URL
             |----------------------------------------------------------------------
             */
-            $labelUrl =
-                "https://sandbox.melhorenvio.com.br/painel/etiquetas/"
-                . $cart['id'];
+            $print = $service->imprimirEtiqueta([
+                $cart['id']
+            ]);
+
+            \Log::info('Impressão etiqueta', [
+                'response' => $print
+            ]);
+
+            $labelUrl = $print['url'] ?? null;
 
             /*
             |----------------------------------------------------------------------
@@ -417,11 +423,24 @@ class ShipmentController extends Controller
             */
             $labelUrl = $shipment->label_url;
 
+            /*
+            |--------------------------------------------------------------------------
+            | BUSCAR PDF REAL DA ETIQUETA
+            |--------------------------------------------------------------------------
+            */
             if (!empty($trackingData['generated_at'])) {
 
-                $labelUrl =
-                    "https://sandbox.melhorenvio.com.br/painel/etiquetas/"
-                    . $shipment->shipment_id;
+                $print = $service->imprimirEtiqueta([
+                    $shipment->shipment_id
+                ]);
+
+                \Log::info('PDF etiqueta', [
+                    'response' => $print
+                ]);
+
+                if (!empty($print['url'])) {
+                    $labelUrl = $print['url'];
+                }
             }
 
             /*

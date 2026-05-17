@@ -68,4 +68,15 @@ class MelhorEnvioService {
 
         return $response->json();
     }
+
+    public function imprimirEtiqueta($ids)
+    {
+        return $this->request(
+            'shipment/print',
+            [
+                'mode' => 'public',
+                'orders' => $ids
+            ]
+        );
+    }
 }
