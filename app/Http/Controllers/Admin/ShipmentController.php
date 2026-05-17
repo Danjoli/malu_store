@@ -599,14 +599,32 @@ class ShipmentController extends Controller
         return [
 
             'created' => 'pending',
-            'released' => 'paid',
+
+            // etiqueta comprada/liberada
+            'released' => 'shipped',
+
+            // etiqueta gerada
             'generated' => 'shipped',
+
+            // objeto postado
             'posted' => 'shipped',
+
+            // em trânsito
             'in_transit' => 'shipped',
+
+            // entregue
             'delivered' => 'delivered',
+
+            // falha entrega
             'undelivered' => 'failed',
+
+            // problema
             'suspended' => 'problem',
+
+            // aguardando ação
             'paused' => 'waiting_action',
+
+            // cancelado
             'cancelled' => 'cancelled',
 
         ][$apiStatus] ?? null;

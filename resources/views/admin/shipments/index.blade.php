@@ -90,7 +90,7 @@
                             @if($shipment->label_url)
                                 <a href="{{ $shipment->label_url }}" target="_blank"
                                    class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">
-                                    Imprimir TESTE
+                                    Imprimir Etiqueta
                                 </a>
                             @endif
 
