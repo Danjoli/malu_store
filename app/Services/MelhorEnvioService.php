@@ -55,11 +55,16 @@ class MelhorEnvioService {
     {
         $response = Http::withToken($this->token)
             ->acceptJson()
-            ->get($this->baseUrl . "shipment/check", [
-                'orders' => $shipmentId
+            ->post($this->baseUrl . "shipment/tracking", [
+                'orders' => [$shipmentId]
             ]);
 
-        dd($response->json());
+        // dd([
+        //     'url' => $this->baseUrl . "shipment/tracking",
+        //     'status' => $response->status(),
+        //     'body' => $response->body(),
+        //     'json' => $response->json(),
+        // ]);
 
         return $response->json();
     }
