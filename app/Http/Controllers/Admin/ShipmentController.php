@@ -296,9 +296,11 @@ class ShipmentController extends Controller
 
                 'label_url' => $labelUrl,
 
-                'status' => 'shipped',
+                // AGUARDANDO POSTAGEM
+                'status' => 'waiting_post',
 
-                'shipped_at' => now(),
+                // AINDA NÃO FOI POSTADO
+                'shipped_at' => null,
 
                 'last_update' => json_encode($trackingData)
             ]);
