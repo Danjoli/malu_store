@@ -135,16 +135,16 @@ class ShipmentController extends Controller
                 "service" => (int) $shipment->service_id,
 
                 "from" => [
-                    "name" => "Sua Loja",
-                    "phone" => "11999999999",
-                    "email" => "contato@sualoja.com",
+                    "name" => "Malu Store",
+                    "phone" => "11954598885",
+                    "email" => "elienealvesdelima5@gmail.com",
                     "document" => "02899542400",
-                    "address" => "Rua Origem",
-                    "number" => "100",
-                    "district" => "Centro",
+                    "address" => "Avenida Boturussu",
+                    "number" => "147",
+                    "district" => "Parque Boturussu",
                     "city" => "São Paulo",
                     "state_abbr" => "SP",
-                    "postal_code" => "01010000"
+                    "postal_code" => "03802010"
                 ],
 
                 "to" => [
