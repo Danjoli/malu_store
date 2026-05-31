@@ -207,3 +207,5 @@ class ProductController extends Controller
             ->with('success', 'Produto removido!');
     }
 }
+
+asd
