@@ -208,4 +208,3 @@ class ProductController extends Controller
     }
 }
 
-asd
