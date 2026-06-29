@@ -96,7 +96,7 @@ class PaymentService
             "transaction_amount" => (float) $order->total,
             "description" => "Pedido #" . $order->id,
             "payment_method_id" => "bolbradesco",
-            "notification_url" => route('webhook.mercadopago'),
+            "notification_url" => route('api.webhooks.mercado-pago'),
             "external_reference" => (string) $order->id,
             "date_of_expiration" => $expiresAt->format('Y-m-d\TH:i:s.vP'),
             "payer" => [
