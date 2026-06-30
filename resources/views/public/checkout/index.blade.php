@@ -19,7 +19,7 @@
                 Informações de Entrega
             </h2>
 
-            <form action="{{ route('checkout.process') }}" method="POST">
+            <form id="checkout-form" action="{{ route('checkout.process') }}" method="POST">
                 @csrf
 
                 <input type="hidden" name="address_id" value="{{ $address->id ?? '' }}">
@@ -158,4 +158,3 @@
     window.CSRF_TOKEN = @json(csrf_token());
 </script>
 
-@vite('resources/js/app.js')
