@@ -5,33 +5,40 @@
         session('warning') ? ['type' => 'warning', 'message' => session('warning')] : null,
     ])->filter();
 
-    $validationErrors = $errors->any() ? $errors->all() : [];
+    $validationErrors = (isset($errors) && $errors instanceof \Illuminate\Support\MessageBag && $errors->any())
+        ? $errors->all()
+        : [];
 @endphp
 
 @if($alerts->isNotEmpty() || count($validationErrors))
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
 
-    @foreach ($alerts as $alert)
-        Swal.fire({
+    const alerts = @json($alerts);
+    const errors = @json($validationErrors);
+
+    // Mostra alerts (fila para não travar UI)
+    for (const alert of alerts) {
+        await Swal.fire({
             toast: true,
             position: 'top-end',
-            icon: @json($alert['type']),
-            title: @json($alert['message']),
+            icon: alert.type,
+            title: alert.message,
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true
         });
-    @endforeach
+    }
 
-    @if(count($validationErrors))
+    // Erros de validação (apenas 1 modal)
+    if (errors.length) {
         Swal.fire({
             icon: 'error',
             title: 'Erro de validação',
-            html: @json(implode('<br>', $validationErrors)),
+            html: errors.join('<br>'),
             confirmButtonColor: '#3085d6'
         });
-    @endif
+    }
 
 });
 </script>
