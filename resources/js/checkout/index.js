@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    console.log('Checkout JS carregado');
-
     const form = document.getElementById('checkout-form');
 
     // Se não for a página de checkout, não executa o restante do script.
