@@ -42,6 +42,17 @@ class CheckoutRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'recipient_name.required' => 'Informe o nome do destinatário.',
+            'phone.required'          => 'Informe o telefone.',
+            'street.required'         => 'Informe a rua.',
+            'number.required'         => 'Informe o número.',
+            'neighborhood.required'   => 'Informe o bairro.',
+            'city.required'           => 'Informe a cidade.',
+            'state.required'          => 'Informe o estado.',
+            'state.size'              => 'O estado deve conter exatamente 2 caracteres.',
+            'cep.required'            => 'Informe o CEP.',
+            'cpf.required'            => 'Informe o CPF.',
+
             'shipping_cost.required' => 'Selecione um frete antes de finalizar o pedido.',
             'shipping_cost.numeric'  => 'O valor do frete é inválido.',
             'shipping_cost.min'      => 'O valor do frete deve ser maior ou igual a zero.',

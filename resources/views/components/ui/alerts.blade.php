@@ -1,42 +1,87 @@
 @php
-    $alerts = collect([
-        session('success') ? ['type' => 'success', 'message' => session('success')] : null,
-        session('error')   ? ['type' => 'error',   'message' => session('error')]   : null,
-        session('warning') ? ['type' => 'warning', 'message' => session('warning')] : null,
-    ])->filter();
+    $alerts = [];
 
-    $validationErrors = (isset($errors) && $errors instanceof \Illuminate\Support\MessageBag && $errors->any())
+    if (session()->has('success')) {
+        $alerts[] = [
+            'type' => 'success',
+            'message' => session('success')
+        ];
+    }
+
+    if (session()->has('error')) {
+        $alerts[] = [
+            'type' => 'error',
+            'message' => session('error')
+        ];
+    }
+
+    if (session()->has('warning')) {
+        $alerts[] = [
+            'type' => 'warning',
+            'message' => session('warning')
+        ];
+    }
+
+    $validationErrors = ($errors?->any())
         ? $errors->all()
         : [];
 @endphp
 
-@if($alerts->isNotEmpty() || count($validationErrors))
+@if(count($alerts) || count($validationErrors))
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
 
     const alerts = @json($alerts);
     const errors = @json($validationErrors);
 
-    // Mostra alerts (fila para não travar UI)
     for (const alert of alerts) {
-        await Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: alert.type,
-            title: alert.message,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        });
+
+        // SUCCESS (toast leve)
+        if (alert.type === 'success') {
+            await Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: alert.message,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+
+        // WARNING (toast mais chamativo)
+        else if (alert.type === 'warning') {
+            await Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'warning',
+                title: alert.message,
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                background: '#fff8e1',
+                iconColor: '#f59e0b'
+            });
+        }
+
+        // ERROR (modal forte)
+        else if (alert.type === 'error') {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: alert.message,
+                confirmButtonColor: '#dc2626'
+            });
+        }
     }
 
-    // Erros de validação (apenas 1 modal)
+    // ERROS DE VALIDAÇÃO (sempre modal)
     if (errors.length) {
         Swal.fire({
             icon: 'error',
             title: 'Erro de validação',
             html: errors.join('<br>'),
-            confirmButtonColor: '#3085d6'
+            confirmButtonColor: '#dc2626'
         });
     }
 
