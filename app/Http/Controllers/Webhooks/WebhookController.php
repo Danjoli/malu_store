@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Webhooks;
 
 use App\Http\Controllers\Controller;
+use App\Services\Public\Payment\MercadoPagoWebhookService;
 use Illuminate\Http\Request;
-use App\Services\Payment\MercadoPagoWebhookService;
+
 use App\Services\Shipment\MelhorEnvioWebhookService;
 
 class WebhookController extends Controller
