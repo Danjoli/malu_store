@@ -101,22 +101,32 @@ class PaymentService
 
         $expiresAt = now()->addWeekdays(3);
 
-        $payment = $client->create([
-            "transaction_amount" => (float) $order->total,
-            "description" => "Pedido #" . $order->id,
-            "payment_method_id" => "bolbradesco",
-            "notification_url" => route('api.webhooks.mercado-pago'),
-            "external_reference" => (string) $order->id,
-            "date_of_expiration" => $expiresAt->format('Y-m-d\TH:i:s.vP'),
-            "payer" => [
-                "email" => $order->user->email,
-                "first_name" => $order->user->name,
-                "identification" => [
-                    "type" => "CPF",
-                    "number" => $cpf
+        try {
+
+            $payment = $client->create([
+                "transaction_amount" => (float) $order->total,
+                "description" => "Pedido #" . $order->id,
+                "payment_method_id" => "bolbradesco",
+                "notification_url" => route('api.webhooks.mercado-pago'),
+                "external_reference" => (string) $order->id,
+                "date_of_expiration" => $expiresAt->format('Y-m-d\TH:i:s.vP'),
+                "payer" => [
+                    "email" => $order->user->email,
+                    "first_name" => $order->user->name,
+                    "identification" => [
+                        "type" => "CPF",
+                        "number" => $cpf
+                    ]
                 ]
-            ]
-        ]);
+            ]);
+
+        } catch (MPApiException $e) {
+
+            dd([
+                'status' => $e->getApiResponse()->getStatusCode(),
+                'response' => $e->getApiResponse()->getContent()
+            ]);
+        }
 
         $order->update([
             'gateway_payment_id' => $payment->id,
