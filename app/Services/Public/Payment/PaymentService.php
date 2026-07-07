@@ -227,6 +227,35 @@ class PaymentService
 
     /*
     |-------------------------
+    | RESULTADO - SUCESSO
+    |-------------------------
+    */
+    public function success(int $orderId)
+    {
+        $order = Order::with('user')->findOrFail($orderId);
+
+        return view('public.payments.success', [
+            'order' => $order
+        ]);
+    }
+
+    /*
+    |-------------------------
+    | RESULTADO - ERRO
+    |-------------------------
+    */
+    public function error(int $orderId, ?string $reason = null)
+    {
+        $order = Order::with('user')->findOrFail($orderId);
+
+        return view('public.payments.error', [
+            'order'  => $order,
+            'reason' => $reason
+        ]);
+    }
+
+    /*
+    |-------------------------
     | HELPERS
     |-------------------------
     */
