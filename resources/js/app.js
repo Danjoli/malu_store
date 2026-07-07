@@ -6,6 +6,11 @@ import './products/variants';
 
 import './dashboard/index';
 
+// Pagamentos
+import './payments/pix';
+import './payments/card';
+import './payments/boleto';
+
 import Alpine from 'alpinejs';
 import Swal from 'sweetalert2';
 
