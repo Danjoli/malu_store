@@ -234,7 +234,7 @@ class PaymentService
     {
         $order = Order::with('user')->findOrFail($orderId);
 
-        return view('public.payments.success', [
+        return view('public.payments.result.success', [
             'order' => $order
         ]);
     }
@@ -248,7 +248,7 @@ class PaymentService
     {
         $order = Order::with('user')->findOrFail($orderId);
 
-        return view('public.payments.error', [
+        return view('public.payments.result.error', [
             'order'  => $order,
             'reason' => $reason
         ]);
