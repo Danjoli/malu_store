@@ -159,8 +159,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/process', [CheckoutController::class,'processOrder'])
         ->name('checkout.process');
 
-    Route::get('/payment/{order}', [PaymentController::class, 'index'])
-        ->name('payment');
+    Route::get('/payment/{order}', [PaymentController::class, 'method'])
+        ->name('payment.method');
 
     /*
     |--------------------------------------------------------------------------

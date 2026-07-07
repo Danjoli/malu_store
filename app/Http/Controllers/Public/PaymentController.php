@@ -13,9 +13,9 @@ class PaymentController extends Controller
         protected PaymentService $paymentService
     ) {}
 
-    public function index($orderId)
+    public function method($orderId)
     {
-        return $this->paymentService->index($orderId);
+        return $this->paymentService->method($orderId);
     }
 
     /*

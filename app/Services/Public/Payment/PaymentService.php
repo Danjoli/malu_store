@@ -16,7 +16,7 @@ class PaymentService
         MercadoPagoConfig::setAccessToken(config('services.mercadopago.token'));
     }
 
-    public function index(int $orderId)
+    public function method(int $orderId)
     {
         $order = Order::with('user')->findOrFail($orderId);
 
