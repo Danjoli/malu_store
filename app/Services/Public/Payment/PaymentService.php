@@ -137,6 +137,7 @@ class PaymentService
                     ->format('Y-m-d\TH:i:s.vP'),
 
                 "payer" => [
+
                     "email" => $order->user->email,
 
                     "first_name" => $firstName,
@@ -146,6 +147,20 @@ class PaymentService
                     "identification" => [
                         "type" => "CPF",
                         "number" => $cpf
+                    ],
+
+                    "address" => [
+                        "zip_code" => preg_replace('/\D/', '', $address->cep),
+
+                        "street_name" => $address->street,
+
+                        "street_number" => $address->number,
+
+                        "neighborhood" => $address->neighborhood,
+
+                        "city" => $address->city,
+
+                        "federal_unit" => $address->state
                     ]
                 ]
 
