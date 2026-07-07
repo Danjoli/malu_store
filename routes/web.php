@@ -159,9 +159,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/process', [CheckoutController::class,'processOrder'])
         ->name('checkout.process');
 
-    Route::get('/payment/{order}', [PaymentController::class, 'method'])
-        ->name('payment.method');
-
     /*
     |--------------------------------------------------------------------------
     | FRETE (MELHOR ENVIO)
@@ -173,7 +170,19 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | PAGAMENTOS
+    | PAGAMENTOS - ESCOLHA DO MÉTODO
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/payment/{order}', [PaymentController::class, 'method'])
+        ->name('payment.method');
+
+    Route::post('/payment/{order}/process', [PaymentController::class, 'process'])
+        ->name('payment.process');
+
+    /*
+    |--------------------------------------------------------------------------
+    | MÉTODOS DE PAGAMENTO
     |--------------------------------------------------------------------------
     */
 
