@@ -51,7 +51,7 @@ Route::get('/privacy', function () {
 
 Route::get('/product/{id}', [PublicProductController::class, 'show'])
     ->name('product.show');
-    
+
 /*
 |--------------------------------------------------------------------------
 | AUTENTICAÇÃO CLIENTE
@@ -159,7 +159,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/process', [CheckoutController::class,'processOrder'])
         ->name('checkout.process');
 
-    Route::get('/payment/{order}', [PaymentController::class, 'createPix'])->name('payment');
+    Route::get('/payment/{order}', [PaymentController::class, 'index'])
+        ->name('payment');
 
     /*
     |--------------------------------------------------------------------------

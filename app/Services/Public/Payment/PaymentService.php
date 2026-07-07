@@ -16,6 +16,15 @@ class PaymentService
         MercadoPagoConfig::setAccessToken(config('services.mercadopago.token'));
     }
 
+    public function index(int $orderId)
+    {
+        $order = Order::with('user')->findOrFail($orderId);
+
+        return view('public.payments.index', [
+            'order' => $order
+        ]);
+    }
+
     /*
     |-------------------------
     | PIX
