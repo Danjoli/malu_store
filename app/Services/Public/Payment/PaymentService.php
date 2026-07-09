@@ -277,7 +277,15 @@ class PaymentService
                         "last_name" => $lastName
                     ],
 
-                    "items" => $items
+                    "items" => $items,
+
+                    "shipments" => [
+                        "receiver_address" => [
+                            "zip_code" => preg_replace('/\D/', '', $order->address->cep),
+                            "street_name" => $order->address->street,
+                            "street_number" => $order->address->number,
+                        ]
+                    ]
                 ]
 
             ]);
