@@ -22,9 +22,11 @@
         ];
     }
 
-    $validationErrors = ($errors?->any())
-        ? $errors->all()
-        : [];
+    $validationErrors = [];
+
+    if (isset($errors) && $errors->any()) {
+        $validationErrors = $errors->all();
+    }
 @endphp
 
 @if(count($alerts) || count($validationErrors))
