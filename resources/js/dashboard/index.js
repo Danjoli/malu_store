@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    console.log('Criando gráfico');
+    
     new Chart(ctx, {
         type: 'line',
         data: {
