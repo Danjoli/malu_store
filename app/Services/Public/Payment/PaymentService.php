@@ -198,7 +198,11 @@ class PaymentService
     */
     public function processCard(int $orderId, array $data)
     {
-        $order = Order::with(['user', 'items'])->findOrFail($orderId);
+        $order = Order::with([
+            'user',
+            'items',
+            'address'
+        ])->findOrFail($orderId);
 
         if ($order->status === 'paid') {
             return [
