@@ -321,19 +321,24 @@ class PaymentService
                 'status' => $status
             ];
 
-        } catch (\Exception $e) {
+        } catch (MPApiException $e) {
 
             DB::rollBack();
 
-            Log::error('Payment error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+            dd([
+                'status' => $e->getApiResponse()->getStatusCode(),
+                'response' => $e->getApiResponse()->getContent(),
             ]);
 
-            return [
-                'success' => false,
-                'error' => 'Erro interno'
-            ];
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            dd([
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
         }
     }
 
