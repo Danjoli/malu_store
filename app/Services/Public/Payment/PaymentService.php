@@ -303,7 +303,8 @@ class PaymentService
             $order->update([
                 'gateway_payment_id' => $payment->id,
                 'status' => $status,
-                'gateway_status' => $payment->status
+                'gateway_status' => $payment->status,
+                'payment_method' => $payment->payment_method_id
             ]);
 
             if ($status === 'paid') {
