@@ -304,7 +304,8 @@ class PaymentService
                 'gateway_payment_id' => $payment->id,
                 'status' => $status,
                 'gateway_status' => $payment->status,
-                'payment_method' => $payment->payment_method_id
+                'payment_method' => $payment->payment_method_id,
+                'paid_at' => $status === 'paid' ? now() : null,
             ]);
 
             if ($status === 'paid') {
@@ -326,20 +327,20 @@ class PaymentService
 
             DB::rollBack();
 
-            dd([
-                'status' => $e->getApiResponse()->getStatusCode(),
-                'response' => $e->getApiResponse()->getContent(),
-            ]);
+            return [
+                'success' => false,
+                'error' => 'Pagamento recusado pelo Mercado Pago',
+                'details' => $e->getApiResponse()->getContent()
+            ];
 
         } catch (\Throwable $e) {
 
             DB::rollBack();
 
-            dd([
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
         }
     }
 
