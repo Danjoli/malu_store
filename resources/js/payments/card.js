@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         window.location.href = `/payment-pending/${window.ORDER_ID}`;
                     }
                     else if (result.success === false) {
-                        alert(result.error?.message || "Erro no pagamento");
+                        console.log(result);
+                        alert(JSON.stringify(result, null, 2));
                     }
                     else {
                         window.location.href = `/payment-error/${window.ORDER_ID}`;
