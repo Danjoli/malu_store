@@ -246,11 +246,11 @@ class PaymentService
                 ];
             }
 
-            $client = new PaymentClient();
-
-            $payment = $client->create([
+            $paymentData = [
 
                 "transaction_amount" => (float) $order->total,
+
+                "description" => "Pedido Malu Store #".$order->id,
 
                 "token" => $data['token'],
 
@@ -267,7 +267,7 @@ class PaymentService
                 "external_reference" => (string) $order->id,
 
                 "payer" => [
-                    "email" => $order->user->email,
+                    "email" => $data['email'] ?? $order->user->email,
                     "identification" => [
                         "type" => "CPF",
                         "number" => $cpf
@@ -292,7 +292,28 @@ class PaymentService
                     ]
                 ]
 
-            ]);
+            ];
+
+            /*
+            |--------------------------------------------------------------------------
+            | issuer_id só envia se existir
+            |--------------------------------------------------------------------------
+            */
+
+
+            if (
+                !empty($data['issuer_id'])
+            ) {
+
+                $paymentData['issuer_id'] =
+                    (int)$data['issuer_id'];
+            }
+
+            $client = new PaymentClient();
+
+            $payment = $client->create(
+                $paymentData
+            );
 
             $status = match ($payment->status) {
                 'approved' => 'paid',
@@ -304,6 +325,7 @@ class PaymentService
                 'gateway_payment_id' => $payment->id,
                 'status' => $status,
                 'gateway_status' => $payment->status,
+                'gateway_status_detail' => $payment->status_detail ?? null,
                 'payment_method' => $payment->payment_method_id,
                 'paid_at' => $status === 'paid' ? now() : null,
             ]);
@@ -319,8 +341,9 @@ class PaymentService
             DB::commit();
 
             return [
-                'success' => true,
-                'status' => $status
+                'success' => $status !== 'failed',
+                'status'=>$status,
+                'detail'=>$payment->status_detail ?? null
             ];
 
         } catch (MPApiException $e) {
