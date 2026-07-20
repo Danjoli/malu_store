@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Public;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Public\Payment\ProcessCardPaymentRequest;
-use App\Services\Public\Payment\PaymentService;
+use App\Services\Payment\PaymentService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -13,114 +11,51 @@ class PaymentController extends Controller
         protected PaymentService $paymentService
     ) {}
 
-    /*
-    |--------------------------------------------------------------------------
-    | ESCOLHA DO MÉTODO DE PAGAMENTO
-    |--------------------------------------------------------------------------
-    */
-
-    public function method($orderId)
+    /**
+     * Exibe a página de pagamento do pedido.
+     */
+    public function method(int $orderId)
     {
         return $this->paymentService->method($orderId);
     }
 
-     public function process(Request $request, $orderId)
-    {
-        $request->validate([
-            'payment_method' => [
-                'required',
-                'in:pix,card,boleto'
-            ]
-        ]);
-
-
-        return match ($request->payment_method) {
-
-            'pix' => redirect()->route(
-                'payment.pix',
-                $orderId
-            ),
-
-            'card' => redirect()->route(
-                'payment.card',
-                $orderId
-            ),
-
-            'boleto' => redirect()->route(
-                'payment.boleto',
-                $orderId
-            ),
-
-        };
-    }
-
-    /*
-    |-------------------------
-    | PIX
-    |-------------------------
-    */
-    public function createPix($orderId)
+    /**
+     * Cria um pagamento via Pix.
+     */
+    public function pix(int $orderId)
     {
         return $this->paymentService->pix($orderId);
     }
 
-    /*
-    |-------------------------
-    | BOLETO
-    |-------------------------
-    */
-    public function createBoleto($orderId)
+    /**
+     * Cria um pagamento via boleto.
+     */
+    public function boleto(int $orderId)
     {
         return $this->paymentService->boleto($orderId);
     }
 
-    /*
-    |-------------------------
-    | CARTÃO
-    |-------------------------
-    */
-    public function createCard($orderId)
+    /**
+     * Processa um pagamento via cartão.
+     */
+    public function card(Request $request, int $orderId)
     {
-        return $this->paymentService->cardView($orderId);
+        return $this->paymentService->card($request, $orderId);
     }
 
-    public function processCard(ProcessCardPaymentRequest $request, $orderId)
-    {
-        return response()->json(
-            $this->paymentService->processCard(
-                $orderId,
-                $request->validated()
-            )
-        );
-    }
-
-    /*
-    |-------------------------
-    | STATUS
-    |-------------------------
-    */
-    public function status($orderId)
-    {
-        return response()->json(
-            $this->paymentService->status($orderId)
-        );
-    }
-
-    /*
-    |-------------------------
-    | RESULTADOS
-    |-------------------------
-    */
-    public function success($orderId)
+    /**
+     * Exibe a página de sucesso.
+     */
+    public function success(int $orderId)
     {
         return $this->paymentService->success($orderId);
     }
 
-    public function error(Request $request, $orderId)
+    /**
+     * Exibe a página de erro.
+     */
+    public function error(int $orderId)
     {
-        return $this->paymentService->error(
-            $orderId,
-            $request->query('reason')
-        );
+        return $this->paymentService->error($orderId);
     }
 }
