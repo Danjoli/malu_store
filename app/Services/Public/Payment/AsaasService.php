@@ -126,7 +126,7 @@ class AsaasService
                 'customer' => $customer['id'],
                 'billingType' => 'BOLETO',
                 'value' => $order->total,
-                'dueDate' => now()->format('Y-m-d'),
+                'dueDate' => now()->addDays(3)->format('Y-m-d'),
                 'description' => 'Pedido #' . $order->id,
                 'externalReference' => (string) $order->id,
             ]
