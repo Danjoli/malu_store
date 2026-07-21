@@ -134,4 +134,17 @@ class PaymentService
 
         return view('public.payments.result.error', compact('order'));
     }
+
+    /**
+     * Retorna status atual do pedido.
+     */
+    public function status(int $orderId)
+    {
+        $order = Order::findOrFail($orderId);
+
+        return response()->json([
+            'status' => $order->status,
+            'gateway_status' => $order->gateway_status,
+        ]);
+    }
 }
