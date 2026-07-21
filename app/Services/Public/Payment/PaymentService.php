@@ -65,6 +65,16 @@ class PaymentService
     }
 
     /**
+     * Exibe a página de pagamento via cartão.
+     */
+    public function cardView(int $orderId)
+    {
+        $order = Order::findOrFail($orderId);
+
+        return view('public.payments.card', compact('order'));
+    }
+
+    /**
      * Processa pagamento via cartão.
      */
     public function card(Request $request, int $orderId)

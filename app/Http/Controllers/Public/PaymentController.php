@@ -21,6 +21,27 @@ class PaymentController extends Controller
     }
 
     /**
+     * Processa o método de pagamento escolhido.
+     */
+    public function process(Request $request, int $orderId)
+    {
+        $request->validate([
+            'payment_method' => [
+                'required',
+                'in:pix,card,boleto',
+            ],
+        ]);
+
+        return match ($request->payment_method) {
+            'pix' => $this->paymentService->pix($orderId),
+
+            'card' => $this->paymentService->cardView($orderId),
+
+            'boleto' => $this->paymentService->boleto($orderId),
+        };
+    }
+
+    /**
      * Cria um pagamento via Pix.
      */
     public function pix(int $orderId)
