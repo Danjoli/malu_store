@@ -40,6 +40,7 @@ class PaymentService
             'gateway_payment_id' => $payment['id'] ?? null,
             'gateway_status' => $payment['status'] ?? 'PENDING',
             'status' => 'pending',
+            'payment_method' => 'pix',
             'expires_at' => now()->addMinutes(30),
         ]);
 
@@ -65,6 +66,7 @@ class PaymentService
             'gateway_payment_id' => $payment['id'] ?? null,
             'gateway_status' => $payment['status'] ?? 'PENDING',
             'status' => 'pending',
+            'payment_method' => 'boleto',
         ]);
 
         return view('public.payments.methods.boleto', [
