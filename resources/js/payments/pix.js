@@ -11,41 +11,38 @@ document.addEventListener('DOMContentLoaded', () => {
     |--------------------------------------------------------------------------
     */
 
-    if (copyButton && pixCodeElement) {
+    if (pixCodeElement && copyButton) {
 
-        copyButton.addEventListener('click', async () => {
+        copyButton.addEventListener('click', function () {
+
+            pixCodeElement.select();
+            pixCodeElement.setSelectionRange(0, 99999);
+
 
             try {
 
-                await navigator.clipboard.writeText(
-                    pixCodeElement.value
-                );
+                document.execCommand('copy');
 
-
-                copyButton.textContent =
-                    'PIX copiado!';
-
+                copyButton.innerHTML = 'PIX copiado!';
 
 
                 setTimeout(() => {
 
-                    copyButton.textContent =
+                    copyButton.innerHTML =
                         'Copiar código PIX';
 
                 }, 2000);
 
 
-
             } catch (error) {
 
                 console.error(
-                    'Erro ao copiar PIX:',
+                    'Erro ao copiar:',
                     error
                 );
 
-
                 alert(
-                    'Não foi possível copiar o código PIX.'
+                    'Erro ao copiar o PIX'
                 );
 
             }
