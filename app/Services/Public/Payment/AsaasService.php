@@ -30,14 +30,52 @@ class AsaasService
     }
 
     /**
+     * Cria um cliente no Asaas.
+     */
+    protected function createCustomer(Order $order): array
+    {
+        $user = $order->user;
+        $address = $order->address;
+
+        if (!$user) {
+            throw new RuntimeException('Usuário não encontrado.');
+        }
+
+        if (!$address) {
+            throw new RuntimeException('Endereço não encontrado.');
+        }
+
+        $response = $this->http()->post(
+            $this->baseUrl . '/customers',
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+                'cpfCnpj' => $address->cpf,
+                'externalReference' => (string) $order->id,
+            ]
+        );
+
+        if ($response->failed()) {
+            throw new RuntimeException(
+                'Erro ao criar cliente no Asaas: ' .
+                $response->body()
+            );
+        }
+
+        return $response->json();
+    }
+
+    /**
      * Cria pagamento via Pix.
      */
     public function createPixPayment(Order $order): array
     {
+        $customer = $this->createCustomer($order);
+
         $response = $this->http()->post(
             $this->baseUrl . '/payments',
             [
-                'customer' => $order->asaas_customer_id,
+                'customer' => $customer['id'],
                 'billingType' => 'PIX',
                 'value' => $order->total,
                 'dueDate' => now()->format('Y-m-d'),
@@ -61,10 +99,12 @@ class AsaasService
      */
     public function createBoletoPayment(Order $order): array
     {
+        $customer = $this->createCustomer($order);
+
         $response = $this->http()->post(
             $this->baseUrl . '/payments',
             [
-                'customer' => $order->asaas_customer_id,
+                'customer' => $customer['id'],
                 'billingType' => 'BOLETO',
                 'value' => $order->total,
                 'dueDate' => now()->format('Y-m-d'),
@@ -90,10 +130,13 @@ class AsaasService
         Order $order,
         array $cardData
     ): array {
+
+        $customer = $this->createCustomer($order);
+
         $response = $this->http()->post(
             $this->baseUrl . '/payments',
             [
-                'customer' => $order->asaas_customer_id,
+                'customer' => $customer['id'],
                 'billingType' => 'CREDIT_CARD',
                 'value' => $order->total,
                 'dueDate' => now()->format('Y-m-d'),
