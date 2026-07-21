@@ -37,7 +37,7 @@ class PaymentService
             'status' => 'pending',
         ]);
 
-        return view('payment.pix', [
+        return view('public.payments.methods.pix', [
             'order' => $order,
             'payment' => $payment,
         ]);
@@ -58,7 +58,7 @@ class PaymentService
             'status' => 'pending',
         ]);
 
-        return view('payment.boleto', [
+        return view('public.payments.methods.boleto', [
             'order' => $order,
             'payment' => $payment,
         ]);
@@ -71,7 +71,7 @@ class PaymentService
     {
         $order = Order::findOrFail($orderId);
 
-        return view('public.payments.card', compact('order'));
+        return view('public.payments.methods.card', compact('order'));
     }
 
     /**
@@ -113,7 +113,7 @@ class PaymentService
     {
         $order = Order::findOrFail($orderId);
 
-        return view('payment.success', compact('order'));
+        return view('public.payments.result.success', compact('order'));
     }
 
     /**
@@ -123,6 +123,6 @@ class PaymentService
     {
         $order = Order::findOrFail($orderId);
 
-        return view('payment.error', compact('order'));
+        return view('public.payments.result.error', compact('order'));
     }
 }
