@@ -67,11 +67,25 @@ class PaymentService
             'gateway_status' => $payment['status'] ?? 'PENDING',
             'status' => 'pending',
             'payment_method' => 'boleto',
+            'expires_at' => isset($payment['dueDate'])
+                ? $payment['dueDate'] . ' 23:59:59'
+                : null,
         ]);
 
         return view('public.payments.methods.boleto', [
             'order' => $order,
             'payment' => $payment,
+
+            // Link direto para o PDF do boleto
+            'boleto_url' => $payment['bankSlipUrl']
+                ?? null,
+
+            // Link da fatura do Asaas, como alternativa
+            'invoice_url' => $payment['invoiceUrl']
+                ?? null,
+
+            'expires_at' => $payment['dueDate']
+                ?? null,
         ]);
     }
 
