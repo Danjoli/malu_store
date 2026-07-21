@@ -1,18 +1,8 @@
-console.log('PIX JS carregado');
-
 document.addEventListener('DOMContentLoaded', () => {
-
-    console.log('DOM carregado');
 
     const countdownElement = document.getElementById('countdown');
     const pixCodeElement = document.getElementById('pixCode');
     const copyButton = document.getElementById('copyPixButton');
-
-    console.log({
-        pixCodeElement,
-        copyButton
-    });
-
 
     /*
     |--------------------------------------------------------------------------
