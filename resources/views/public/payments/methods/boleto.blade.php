@@ -38,7 +38,7 @@
 
                 <p class="text-sm text-red-500 mb-6">
                     Vencimento:
-                    {{ \Carbon\Carbon::parse($expires_at)->format('d/m/Y H:i') }}
+                    {{ \Carbon\Carbon::parse($expires_at)->format('d/m/Y') }}
                 </p>
 
             @endif
