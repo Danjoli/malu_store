@@ -40,7 +40,7 @@ class PaymentService
             'gateway_payment_id' => $payment['id'] ?? null,
             'gateway_status' => $payment['status'] ?? 'PENDING',
             'status' => 'pending',
-            'expires_at' => $payment['dueDate'] ?? null,
+            'expires_at' => now()->addMinutes(30),
         ]);
 
         // Exibe a tela do Pix
