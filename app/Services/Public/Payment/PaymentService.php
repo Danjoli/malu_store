@@ -29,17 +29,25 @@ class PaymentService
     {
         $order = Order::findOrFail($orderId);
 
+        // Cria o pagamento
         $payment = $this->asaasService->createPixPayment($order);
 
+        // Busca o QR Code do Pix
+        $pix = $this->asaasService->getPixQrCode($payment['id']);
+
+        // Atualiza o pedido
         $order->update([
             'gateway_payment_id' => $payment['id'] ?? null,
             'gateway_status' => $payment['status'] ?? 'PENDING',
             'status' => 'pending',
         ]);
 
+        // Exibe a tela do Pix
         return view('public.payments.methods.pix', [
             'order' => $order,
             'payment' => $payment,
+            'qr_code_base64' => $pix['encodedImage'],
+            'qr_code' => $pix['payload'],
         ]);
     }
 

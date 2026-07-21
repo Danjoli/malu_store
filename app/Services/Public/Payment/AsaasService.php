@@ -95,6 +95,25 @@ class AsaasService
     }
 
     /**
+     * Coleta o QR Code do Pix.
+     */
+    public function getPixQrCode(string $paymentId): array
+    {
+        $response = $this->http()->get(
+            $this->baseUrl . "/payments/{$paymentId}/pixQrCode"
+        );
+
+        if ($response->failed()) {
+            throw new RuntimeException(
+                'Erro ao obter QR Code do Pix: ' .
+                $response->body()
+            );
+        }
+
+        return $response->json();
+    }
+
+    /**
      * Cria pagamento via boleto.
      */
     public function createBoletoPayment(Order $order): array
