@@ -109,6 +109,7 @@ class PaymentService
         $request->validate([
             'card_number' => ['required'],
             'holder_name' => ['required'],
+            'cpf' => ['required'],
             'expiration_month' => ['required'],
             'expiration_year' => ['required'],
             'ccv' => ['required'],
@@ -123,6 +124,7 @@ class PaymentService
             'gateway_payment_id' => $payment['id'] ?? null,
             'gateway_status' => $payment['status'] ?? 'PENDING',
             'status' => 'pending',
+            'payment_method' => 'card',
         ]);
 
         return response()->json([
