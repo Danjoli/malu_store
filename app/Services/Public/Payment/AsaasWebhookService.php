@@ -324,7 +324,7 @@ class AsaasWebhookService
             */
 
             $order->load([
-                'items.product',
+                'items.variant',
             ]);
 
             /*
@@ -334,7 +334,7 @@ class AsaasWebhookService
             */
 
             foreach ($order->items as $item) {
-                $variant = $item->productVariant;
+                $variant = $item->variant;
 
                 if (!$variant) {
                     Log::warning(
