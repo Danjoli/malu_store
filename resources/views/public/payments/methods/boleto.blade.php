@@ -76,9 +76,6 @@
 
 @endsection
 
-
 @push('payment-scripts')
-
-@vite('resources/js/payments/boleto.js')
 
 @endpush

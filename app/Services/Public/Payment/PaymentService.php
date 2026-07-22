@@ -4,8 +4,6 @@ namespace App\Services\Public\Payment;
 
 use App\Http\Requests\Public\Payments\ProcessCardPaymentRequest;
 use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {

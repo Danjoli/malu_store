@@ -69,5 +69,4 @@
 
 </script>
 
-@vite('resources/js/payments/pix.js')
 @endpush

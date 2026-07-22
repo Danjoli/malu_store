@@ -193,6 +193,4 @@
     window.CARD_ERROR_URL = @json( route('payment.error', $order->id) );
 </script>
 
-@vite('resources/js/payments/card.js')
-
 @endpush
