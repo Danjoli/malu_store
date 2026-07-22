@@ -120,11 +120,18 @@ class PaymentService
             $request->all()
         );
 
+        $paymentStatus = $payment['status'] ?? 'PENDING';
+
         $order->update([
             'gateway_payment_id' => $payment['id'] ?? null,
-            'gateway_status' => $payment['status'] ?? 'PENDING',
-            'status' => 'pending',
+            'gateway_status' => $paymentStatus,
+            'status' => $paymentStatus === 'CONFIRMED'
+                ? 'paid'
+                : 'pending',
             'payment_method' => 'card',
+            'paid_at' => $paymentStatus === 'CONFIRMED'
+                ? now()
+                : null,
         ]);
 
         return response()->json([
