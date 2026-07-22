@@ -53,6 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
 
+                if ( data.payment_failed === true || data.error_type === 'authorization' ) {
+                    window.location.href = window.CARD_ERROR_URL;
+                    return;
+                }
+
                 // Erros de validação do ProcessCardPaymentRequest
                 if (data.errors) {
 
