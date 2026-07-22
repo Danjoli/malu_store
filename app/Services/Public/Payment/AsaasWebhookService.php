@@ -334,15 +334,15 @@ class AsaasWebhookService
             */
 
             foreach ($order->items as $item) {
-                $product = $item->product;
+                $variant = $item->productVariant;
 
-                if (!$product) {
+                if (!$variant) {
                     Log::warning(
-                        'Produto não encontrado ao finalizar pedido.',
+                        'Variante do produto não encontrada ao finalizar pedido.',
                         [
                             'order_id' => $order->id,
                             'order_item_id' => $item->id,
-                            'product_id' => $item->product_id,
+                            'product_variant_id' => $item->product_variant_id,
                         ]
                     );
 
@@ -355,13 +355,13 @@ class AsaasWebhookService
                 |--------------------------------------------------------------------------
                 */
 
-                if ($product->stock < $item->quantity) {
+                if ($variant->stock < $item->quantity) {
                     Log::warning(
                         'Estoque insuficiente ao finalizar pedido.',
                         [
                             'order_id' => $order->id,
-                            'product_id' => $product->id,
-                            'stock_atual' => $product->stock,
+                            'product_variant_id' => $variant->id,
+                            'stock_atual' => $variant->stock,
                             'quantidade_pedida' => $item->quantity,
                         ]
                     );
@@ -375,7 +375,7 @@ class AsaasWebhookService
                 |--------------------------------------------------------------------------
                 */
 
-                $product->decrement(
+                $variant->decrement(
                     'stock',
                     $item->quantity
                 );
@@ -384,9 +384,9 @@ class AsaasWebhookService
                     'Estoque atualizado após pagamento.',
                     [
                         'order_id' => $order->id,
-                        'product_id' => $product->id,
+                        'product_variant_id' => $variant->id,
                         'quantidade_baixada' => $item->quantity,
-                        'estoque_restante' => $product->fresh()->stock,
+                        'estoque_restante' => $variant->fresh()->stock,
                     ]
                 );
             }
