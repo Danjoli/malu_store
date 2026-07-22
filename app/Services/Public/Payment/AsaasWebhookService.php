@@ -12,6 +12,9 @@ class AsaasWebhookService
         Log::info('Webhook Asaas recebido', [
             'event' => $data['event'] ?? null,
             'payment_id' => $data['payment']['id'] ?? null,
+            'payment_status' => $data['payment']['status'] ?? null,
+            'billing_type' => $data['payment']['billingType'] ?? null,
+            'external_reference' => $data['payment']['externalReference'] ?? null,
         ]);
 
         $event = $data['event'] ?? null;
