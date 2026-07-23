@@ -82,8 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await Swal.fire({
                     icon: 'error',
                     title: 'Erro',
-                    text: data.message ||
-                        'Não foi possível processar o pagamento.',
+                    text: 'Não foi possível processar o pagamento. Verifique os dados do cartão e tente novamente.',
                     confirmButtonColor: '#dc2626'
                 });
 
