@@ -143,7 +143,7 @@
                     class="w-full bg-green-600 text-white py-3 rounded-lg">
                     Finalizar Pedido
                 </button>
-{{-- teste --}}
+
             </form>
         </div>
 
