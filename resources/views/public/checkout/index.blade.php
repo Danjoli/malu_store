@@ -516,6 +516,4 @@
 
 </script>
 
-@vite('resources/js/checkout.js')
-
 @endpush
