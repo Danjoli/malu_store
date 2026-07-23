@@ -119,7 +119,6 @@ class ProfileController extends Controller
                 'items',
                 'items.variant.product',
                 'shipment',
-                'address'
             ])
             ->findOrFail($id);
 
