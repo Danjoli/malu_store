@@ -6,7 +6,6 @@
 
 <div class="max-w-6xl mx-auto px-6 py-10">
 
-```
 <h1 class="text-3xl font-bold mb-8 tracking-tight">
     Finalizar Compra
 </h1>
@@ -361,7 +360,6 @@
     </div>
 
 </form>
-```
 
 </div>
 

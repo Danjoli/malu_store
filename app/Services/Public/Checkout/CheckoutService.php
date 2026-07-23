@@ -149,7 +149,7 @@ class CheckoutService
                         'phone' => $data['phone'],
                         'street' => $data['street'],
                         'number' => $data['number'],
-                        'complement' => $complement,
+                        'complement' => $data['complement'] ?? null,
                         'neighborhood' => $data['neighborhood'],
                         'city' => $data['city'],
                         'state' => $state,
