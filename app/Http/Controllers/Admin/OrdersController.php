@@ -23,7 +23,6 @@ class OrdersController extends Controller
             'items',
             'items.variant.product',
             'items.variant.product.images',
-            'address'
         ]);
 
         return view('admin.orders.show', compact('order'));

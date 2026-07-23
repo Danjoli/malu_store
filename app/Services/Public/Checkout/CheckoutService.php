@@ -51,6 +51,7 @@ class CheckoutService
                 $address = Address::where('user_id', $user->id)
                     ->where('recipient_name', $data['recipient_name'])
                     ->where('phone', $data['phone'])
+                    ->where('cpf', $cpf)
                     ->where('street', $data['street'])
                     ->where('number', $data['number'])
                     ->where('neighborhood', $data['neighborhood'])
@@ -108,11 +109,25 @@ class CheckoutService
 
             $order = Order::create([
                 'user_id' => $user->id,
-                'address_id' => $address->id,
-                'cpf' => preg_replace('/\D/', '', $data['cpf']),
+
+                // Snapshot do endereço
+                'recipient_name' => $address->recipient_name,
+                'phone' => $address->phone,
+                'cpf' => $address->cpf,
+                'street' => $address->street,
+                'number' => $address->number,
+                'complement' => $address->complement,
+                'neighborhood' => $address->neighborhood,
+                'city' => $address->city,
+                'state' => $address->state,
+                'cep' => $address->cep,
+
+                // Valores
                 'subtotal' => $subtotal,
                 'shipping' => $shipping,
                 'total' => $total,
+
+                // Status
                 'status' => 'pending',
             ]);
 

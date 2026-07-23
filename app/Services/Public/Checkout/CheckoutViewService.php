@@ -118,8 +118,7 @@ class CheckoutViewService
         */
 
         $subtotal = $items->sum(function ($item) {
-            return (float) $item->price
-                * (int) $item->quantity;
+            return (float) $item->price * (int) $item->quantity;
         });
 
         /*
