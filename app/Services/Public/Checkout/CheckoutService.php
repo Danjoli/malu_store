@@ -2,17 +2,31 @@
 
 namespace App\Services\Public\Checkout;
 
-use App\Models\{Cart, Address, Order, OrderItem, Shipment};
-use Illuminate\Support\Facades\DB;
+use App\Models\{Address, Cart, Order, OrderItem, Shipment};
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class CheckoutService
 {
-    public function process(array $data)
+    /**
+     * Processa o checkout e cria o pedido.
+     */
+    public function process(array $data): Order
     {
         $user = Auth::user();
 
+        if (!$user) {
+            throw new RuntimeException('Usuário não autenticado.');
+        }
+
         return DB::transaction(function () use ($user, $data) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | CARRINHO
+            |--------------------------------------------------------------------------
+            */
 
             $cart = Cart::with('items.variant')
                 ->where('user_id', $user->id)
@@ -20,13 +34,46 @@ class CheckoutService
                 ->firstOrFail();
 
             if ($cart->items->isEmpty()) {
-                throw new \Exception('Carrinho vazio');
+                throw new RuntimeException('Carrinho vazio.');
             }
 
-            $subtotal = $cart->items->sum(fn($item) => $item->price * $item->quantity);
+            /*
+            |--------------------------------------------------------------------------
+            | VALORES
+            |--------------------------------------------------------------------------
+            */
 
-            $shipping = (float) $data['shipping_cost'];
+            $subtotal = $cart->items->sum(
+                fn ($item) => $item->price * $item->quantity
+            );
+
+            $shipping = (float) ($data['shipping_cost'] ?? 0);
+
             $total = $subtotal + $shipping;
+
+            /*
+            |--------------------------------------------------------------------------
+            | NORMALIZAÇÃO
+            |--------------------------------------------------------------------------
+            */
+
+            $cpf = preg_replace(
+                '/\D/',
+                '',
+                $data['cpf'] ?? ''
+            );
+
+            $cep = preg_replace(
+                '/\D/',
+                '',
+                $data['cep'] ?? ''
+            );
+
+            $state = strtoupper(
+                trim($data['state'] ?? '')
+            );
+
+            $complement = $data['complement'] ?? null;
 
             /*
             |--------------------------------------------------------------------------
@@ -38,15 +85,33 @@ class CheckoutService
 
             if ($addressId) {
 
-                // Usa o endereço existente selecionado pelo usuário
-                // e garante que ele pertence ao usuário logado.
+                /*
+                |--------------------------------------------------------------------------
+                | ENDEREÇO EXISTENTE
+                |--------------------------------------------------------------------------
+                |
+                | Garante que o endereço selecionado pertence
+                | ao usuário autenticado.
+                |
+                */
+
                 $address = Address::where('user_id', $user->id)
                     ->findOrFail($addressId);
 
+                /*
+                | Usa o CPF informado no checkout.
+                | Caso não seja informado, mantém o CPF salvo no endereço.
+                */
+
+                $cpf = $cpf ?: $address->cpf;
+
             } else {
 
-                // Novo endereço
-                $cpf = preg_replace('/\D/', '', $data['cpf']);
+                /*
+                |--------------------------------------------------------------------------
+                | PROCURA ENDEREÇO EXISTENTE
+                |--------------------------------------------------------------------------
+                */
 
                 $address = Address::where('user_id', $user->id)
                     ->where('recipient_name', $data['recipient_name'])
@@ -55,21 +120,26 @@ class CheckoutService
                     ->where('number', $data['number'])
                     ->where('neighborhood', $data['neighborhood'])
                     ->where('city', $data['city'])
-                    ->where('state', strtoupper($data['state']))
-                    ->where('cep', $data['cep'])
-                    ->where(function ($query) use ($data) {
-                        $complement = $data['complement'] ?? null;
+                    ->where('state', $state)
+                    ->where('cep', $cep)
+                    ->where(function ($query) use ($complement) {
 
-                        if ($complement === null || $complement === '') {
+                        if (empty($complement)) {
                             $query->whereNull('complement')
                                 ->orWhere('complement', '');
                         } else {
                             $query->where('complement', $complement);
                         }
+
                     })
                     ->first();
 
-                // Se não encontrou endereço igual, cria um novo
+                /*
+                |--------------------------------------------------------------------------
+                | CRIA NOVO ENDEREÇO
+                |--------------------------------------------------------------------------
+                */
+
                 if (!$address) {
 
                     $address = Address::create([
@@ -79,37 +149,67 @@ class CheckoutService
                         'phone' => $data['phone'],
                         'street' => $data['street'],
                         'number' => $data['number'],
-                        'complement' => $data['complement'] ?? null,
+                        'complement' => $complement,
                         'neighborhood' => $data['neighborhood'],
                         'city' => $data['city'],
-                        'state' => strtoupper($data['state']),
-                        'cep' => $data['cep'],
+                        'state' => $state,
+                        'cep' => $cep,
                         'cpf' => $cpf,
                         'is_default' => !empty($data['is_default']),
                     ]);
+
+                } else {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | ENDEREÇO ENCONTRADO
+                    |--------------------------------------------------------------------------
+                    |
+                    | Caso o endereço já exista, utiliza o CPF informado
+                    | no checkout ou o CPF salvo no endereço.
+                    |
+                    */
+
+                    $cpf = $cpf ?: $address->cpf;
                 }
             }
 
             /*
             |--------------------------------------------------------------------------
-            | CANCELAR PEDIDOS PENDENTES ANTERIORES
+            | CANCELA PEDIDOS PENDENTES ANTERIORES
             |--------------------------------------------------------------------------
             */
 
             Order::where('user_id', $user->id)
                 ->where('status', 'pending')
-                ->update(['status' => 'cancelled']);
+                ->update([
+                    'status' => 'cancelled',
+                ]);
 
             /*
             |--------------------------------------------------------------------------
-            | CRIAR PEDIDO
+            | CRIA PEDIDO
             |--------------------------------------------------------------------------
+            |
+            | O pedido armazena um snapshot do endereço utilizado.
+            | Não usamos address_id porque o seu Order não possui essa coluna.
+            |
             */
 
             $order = Order::create([
                 'user_id' => $user->id,
-                'address_id' => $address->id,
-                'cpf' => preg_replace('/\D/', '', $data['cpf']),
+
+                'recipient_name' => $address->recipient_name,
+                'phone' => $address->phone,
+                'cpf' => $cpf,
+                'street' => $address->street,
+                'number' => $address->number,
+                'complement' => $address->complement,
+                'neighborhood' => $address->neighborhood,
+                'city' => $address->city,
+                'state' => $address->state,
+                'cep' => $address->cep,
+
                 'subtotal' => $subtotal,
                 'shipping' => $shipping,
                 'total' => $total,
@@ -118,11 +218,12 @@ class CheckoutService
 
             /*
             |--------------------------------------------------------------------------
-            | CRIAR ITENS DO PEDIDO
+            | CRIA ITENS DO PEDIDO
             |--------------------------------------------------------------------------
             */
 
             foreach ($cart->items as $item) {
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_variant_id' => $item->product_variant_id,
@@ -131,13 +232,13 @@ class CheckoutService
                     'color_snapshot' => $item->color_snapshot,
                     'size_snapshot' => $item->size_snapshot,
                     'price' => $item->price,
-                    'quantity' => $item->quantity
+                    'quantity' => $item->quantity,
                 ]);
             }
 
             /*
             |--------------------------------------------------------------------------
-            | CRIAR ENVIO
+            | CRIA ENVIO
             |--------------------------------------------------------------------------
             */
 
@@ -146,7 +247,7 @@ class CheckoutService
                 'carrier' => $data['carrier'],
                 'shipping_cost' => $shipping,
                 'service_id' => $data['service'],
-                'status' => 'pending'
+                'status' => 'pending',
             ]);
 
             return $order;
