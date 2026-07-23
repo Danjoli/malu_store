@@ -177,7 +177,22 @@ class CheckoutService
                     ->where('city', $data['city'])
                     ->where('state', $state)
                     ->where('cep', $cep)
-                    ->where('complement', $complement) // Adiciona a verificação do complemento
+                    ->where(function ($query) use ($complement) {
+
+                        if ($complement === null) {
+
+                            $query->whereNull('complement')
+                                ->orWhere('complement', '');
+
+                        } else {
+
+                            $query->where(
+                                'complement',
+                                $complement
+                            );
+                        }
+
+                    })
                     ->first();
 
                 /*
@@ -201,7 +216,7 @@ class CheckoutService
                         | Aqui o complemento é salvo corretamente.
                         */
 
-                        'complement' => $data['complement'] ?? null,
+                        'complement' => $data['street'] ?? null,
 
                         'neighborhood' => $data['neighborhood'],
                         'city' => $data['city'],
