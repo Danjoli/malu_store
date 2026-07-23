@@ -2,7 +2,7 @@
 
 namespace App\Services\Public\Checkout;
 
-use App\Models\{Cart, Address, Order, OrderItem, Shipment};
+use App\Models\{Cart, Order, OrderItem, Shipment};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,7 +45,7 @@ class CheckoutService
 
             /*
             |--------------------------------------------------------------------------
-            | NORMALIZAR DADOS
+            | NORMALIZAR DADOS DO ENDEREÇO
             |--------------------------------------------------------------------------
             */
 
@@ -65,120 +65,33 @@ class CheckoutService
                 trim($data['state'] ?? '')
             );
 
-            $complement = !empty($data['complement'])
+            $recipientName = trim(
+                $data['recipient_name'] ?? ''
+            );
+
+            $phone = trim(
+                $data['phone'] ?? ''
+            );
+
+            $street = trim(
+                $data['street'] ?? ''
+            );
+
+            $number = trim(
+                $data['number'] ?? ''
+            );
+
+            $complement = isset($data['complement'])
                 ? trim($data['complement'])
                 : null;
 
-            /*
-            |--------------------------------------------------------------------------
-            | ENDEREÇO
-            |--------------------------------------------------------------------------
-            |
-            | Se foi informado um address_id, verificamos se pertence ao usuário.
-            | Caso contrário, criamos um novo endereço.
-            |
-            */
+            $neighborhood = trim(
+                $data['neighborhood'] ?? ''
+            );
 
-            $address = null;
-
-            if (!empty($data['address_id'])) {
-
-                $address = Address::where('user_id', $user->id)
-                    ->where('id', $data['address_id'])
-                    ->firstOrFail();
-
-                /*
-                |----------------------------------------------------------------------
-                | Atualiza o endereço com os dados atuais do checkout
-                |----------------------------------------------------------------------
-                |
-                | Isso garante que o complemento digitado no checkout seja salvo.
-                |
-                */
-
-                $address->update([
-                    'label' => $data['label'] ?? $address->label,
-                    'recipient_name' => $data['recipient_name'],
-                    'phone' => $data['phone'],
-                    'cpf' => $cpf,
-                    'street' => $data['street'],
-                    'number' => $data['number'],
-                    'complement' => $complement,
-                    'neighborhood' => $data['neighborhood'],
-                    'city' => $data['city'],
-                    'state' => $state,
-                    'cep' => $cep,
-                ]);
-
-                /*
-                |----------------------------------------------------------------------
-                | Recarrega o endereço atualizado
-                |----------------------------------------------------------------------
-                */
-
-                $address->refresh();
-
-            } else {
-
-                /*
-                |----------------------------------------------------------------------
-                | Procura um endereço exatamente igual
-                |----------------------------------------------------------------------
-                */
-
-                $address = Address::where('user_id', $user->id)
-                    ->where('recipient_name', $data['recipient_name'])
-                    ->where('phone', $data['phone'])
-                    ->where('cpf', $cpf)
-                    ->where('street', $data['street'])
-                    ->where('number', $data['number'])
-                    ->where('neighborhood', $data['neighborhood'])
-                    ->where('city', $data['city'])
-                    ->where('state', $state)
-                    ->where('cep', $cep)
-                    ->where(function ($query) use ($complement) {
-
-                        if ($complement === null) {
-
-                            $query->whereNull('complement')
-                                ->orWhere('complement', '');
-
-                        } else {
-
-                            $query->where('complement', $complement);
-
-                        }
-
-                    })
-                    ->first();
-
-                /*
-                |----------------------------------------------------------------------
-                | Cria novo endereço
-                |----------------------------------------------------------------------
-                */
-
-                if (!$address) {
-
-                    $address = Address::create([
-                        'user_id' => $user->id,
-                        'label' => $data['label'] ?? null,
-                        'recipient_name' => $data['recipient_name'],
-                        'phone' => $data['phone'],
-                        'cpf' => $cpf,
-                        'street' => $data['street'],
-                        'number' => $data['number'],
-                        'complement' => $complement,
-                        'neighborhood' => $data['neighborhood'],
-                        'city' => $data['city'],
-                        'state' => $state,
-                        'cep' => $cep,
-                        'is_default' => !empty($data['is_default']),
-                    ]);
-
-                }
-
-            }
+            $city = trim(
+                $data['city'] ?? ''
+            );
 
             /*
             |--------------------------------------------------------------------------
@@ -197,28 +110,72 @@ class CheckoutService
             | CRIAR PEDIDO
             |--------------------------------------------------------------------------
             |
-            | O pedido recebe um snapshot dos dados atuais do endereço.
+            | IMPORTANTE:
+            |
+            | Aqui NÃO usamos mais $address.
+            |
+            | O endereço enviado pelo checkout é salvo diretamente no pedido.
+            |
+            | Isso cria um snapshot do endereço usado na compra.
+            |
+            | Se o usuário alterar o endereço futuramente no perfil,
+            | o pedido continuará com o endereço original.
             |
             */
 
             $order = Order::create([
 
+                /*
+                |--------------------------------------------------------------------------
+                | USUÁRIO
+                |--------------------------------------------------------------------------
+                */
+
                 'user_id' => $user->id,
 
-                'recipient_name' => $address->recipient_name,
-                'phone' => $address->phone,
-                'cpf' => $address->cpf,
-                'street' => $address->street,
-                'number' => $address->number,
-                'complement' => $address->complement,
-                'neighborhood' => $address->neighborhood,
-                'city' => $address->city,
-                'state' => $address->state,
-                'cep' => $address->cep,
+                /*
+                |--------------------------------------------------------------------------
+                | SNAPSHOT DO ENDEREÇO
+                |--------------------------------------------------------------------------
+                */
+
+                'recipient_name' => $recipientName,
+
+                'phone' => $phone,
+
+                'cpf' => $cpf,
+
+                'street' => $street,
+
+                'number' => $number,
+
+                'complement' => $complement,
+
+                'neighborhood' => $neighborhood,
+
+                'city' => $city,
+
+                'state' => $state,
+
+                'cep' => $cep,
+
+                /*
+                |--------------------------------------------------------------------------
+                | VALORES
+                |--------------------------------------------------------------------------
+                */
 
                 'subtotal' => $subtotal,
+
                 'shipping' => $shipping,
+
                 'total' => $total,
+
+                /*
+                |--------------------------------------------------------------------------
+                | STATUS
+                |--------------------------------------------------------------------------
+                */
 
                 'status' => 'pending',
 
@@ -264,11 +221,11 @@ class CheckoutService
 
                 'order_id' => $order->id,
 
-                'carrier' => $data['carrier'],
+                'carrier' => $data['carrier'] ?? null,
 
                 'shipping_cost' => $shipping,
 
-                'service_id' => $data['service'],
+                'service_id' => $data['service'] ?? null,
 
                 'status' => 'pending',
 
