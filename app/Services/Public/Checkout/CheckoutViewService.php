@@ -25,11 +25,10 @@ class CheckoutViewService
                 'subtotal' => 0,
                 'total' => 0,
                 'shipping' => 0,
-                'addresses' => collect(),
+                'addresses' => [],
                 'address' => null,
             ];
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -41,21 +40,39 @@ class CheckoutViewService
             ->latest()
             ->get();
 
-
         /*
         |--------------------------------------------------------------------------
         | SELECIONAR ENDEREÇO PADRÃO
         |--------------------------------------------------------------------------
-        |
-        | Primeiro tenta encontrar um endereço marcado como padrão.
-        | Caso não exista, utiliza o último endereço cadastrado.
-        |
         */
 
         $address = $addresses
             ->firstWhere('is_default', true)
             ?? $addresses->first();
 
+        /*
+        |--------------------------------------------------------------------------
+        | PREPARAR ENDEREÇOS PARA O JAVASCRIPT
+        |--------------------------------------------------------------------------
+        */
+
+        $addressesData = $addresses->map(function ($address) {
+            return [
+                'id' => $address->id,
+                'label' => $address->label,
+                'recipient_name' => $address->recipient_name,
+                'phone' => $address->phone,
+                'cpf' => $address->cpf,
+                'cep' => $address->cep,
+                'street' => $address->street,
+                'number' => $address->number,
+                'complement' => $address->complement,
+                'neighborhood' => $address->neighborhood,
+                'city' => $address->city,
+                'state' => $address->state,
+                'is_default' => (bool) $address->is_default,
+            ];
+        })->values()->toArray();
 
         /*
         |--------------------------------------------------------------------------
@@ -67,7 +84,6 @@ class CheckoutViewService
             ->where('user_id', $user->id)
             ->where('status', 'active')
             ->first();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -82,15 +98,10 @@ class CheckoutViewService
                 'subtotal' => 0,
                 'total' => 0,
                 'shipping' => 0,
-
-                // Endereços do usuário
-                'addresses' => $addresses,
-
-                // Endereço selecionado inicialmente
+                'addresses' => $addressesData,
                 'address' => $address,
             ];
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -99,7 +110,6 @@ class CheckoutViewService
         */
 
         $items = $cart->items ?? collect();
-
 
         /*
         |--------------------------------------------------------------------------
@@ -112,19 +122,13 @@ class CheckoutViewService
                 * (int) $item->quantity;
         });
 
-
         /*
         |--------------------------------------------------------------------------
         | FRETE
         |--------------------------------------------------------------------------
-        |
-        | Inicialmente o frete é zero.
-        | Ele será calculado posteriormente pelo Melhor Envio.
-        |
         */
 
         $shipping = 0;
-
 
         /*
         |--------------------------------------------------------------------------
@@ -133,7 +137,6 @@ class CheckoutViewService
         */
 
         $total = $subtotal + $shipping;
-
 
         /*
         |--------------------------------------------------------------------------
@@ -147,11 +150,7 @@ class CheckoutViewService
             'subtotal' => $subtotal,
             'shipping' => $shipping,
             'total' => $total,
-
-            // Todos os endereços cadastrados
-            'addresses' => $addresses,
-
-            // Endereço selecionado inicialmente
+            'addresses' => $addressesData,
             'address' => $address,
         ];
     }

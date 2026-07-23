@@ -508,11 +508,11 @@
     |--------------------------------------------------------------------------
     */
 
-    window.CHECKOUT_DATA = {
-        subtotal: @json($subtotal),
-        csrfToken: @json(csrf_token()),
-        addresses: @json( $addresses->map(function ($address) { return [ 'id' => $address->id, 'label' => $address->label, 'recipient_name' => $address->recipient_name, 'phone' => $address->phone, 'cpf' => $address->cpf, 'cep' => $address->cep, 'street' => $address->street, 'number' => $address->number, 'complement' => $address->complement, 'neighborhood' => $address->neighborhood, 'city' => $address->city, 'state' => $address->state, 'is_default' => $address->is_default, ]; }) )
-    };
+    window.CHECKOUT_DATA = @json([
+        'subtotal' => $subtotal,
+        'csrfToken' => csrf_token(),
+        'addresses' => $addresses,
+    ]);
 
 </script>
 
