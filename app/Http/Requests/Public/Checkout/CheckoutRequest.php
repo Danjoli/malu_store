@@ -24,6 +24,10 @@ class CheckoutRequest extends FormRequest
             'phone'          => 'required|string|max:20',
             'street'         => 'required|string|max:255',
             'number'         => 'required|string|max:20',
+
+            // Complemento é opcional
+            'complement'     => 'nullable|string|max:255',
+
             'neighborhood'   => 'required|string|max:100',
             'city'           => 'required|string|max:100',
             'state'          => 'required|string|size:2',
@@ -46,19 +50,21 @@ class CheckoutRequest extends FormRequest
             'phone.required'          => 'Informe o telefone.',
             'street.required'         => 'Informe a rua.',
             'number.required'         => 'Informe o número.',
+
             'neighborhood.required'   => 'Informe o bairro.',
             'city.required'           => 'Informe a cidade.',
             'state.required'          => 'Informe o estado.',
             'state.size'              => 'O estado deve conter exatamente 2 caracteres.',
+
             'cep.required'            => 'Informe o CEP.',
-            'cpf.required'            => 'Informe o CPF.',
+            'cpf.required'             => 'Informe o CPF.',
 
-            'shipping_cost.required' => 'Selecione um frete antes de finalizar o pedido.',
-            'shipping_cost.numeric'  => 'O valor do frete é inválido.',
-            'shipping_cost.min'      => 'O valor do frete deve ser maior ou igual a zero.',
+            'shipping_cost.required'  => 'Selecione um frete antes de finalizar o pedido.',
+            'shipping_cost.numeric'   => 'O valor do frete é inválido.',
+            'shipping_cost.min'       => 'O valor do frete deve ser maior ou igual a zero.',
 
-            'carrier.required'       => 'Selecione uma transportadora.',
-            'service.required'       => 'Selecione um serviço de entrega.',
+            'carrier.required'        => 'Selecione uma transportadora.',
+            'service.required'         => 'Selecione um serviço de entrega.',
         ];
     }
 
@@ -72,6 +78,7 @@ class CheckoutRequest extends FormRequest
             'phone'          => 'telefone',
             'street'         => 'rua',
             'number'         => 'número',
+            'complement'     => 'complemento',
             'neighborhood'   => 'bairro',
             'city'           => 'cidade',
             'state'          => 'estado',
