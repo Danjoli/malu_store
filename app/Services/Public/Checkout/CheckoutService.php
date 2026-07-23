@@ -124,6 +124,7 @@ class CheckoutService
                 */
 
                 $address->update([
+                    'label' => $data['label'] ?? $address->label,
                     'recipient_name' => $data['recipient_name'],
                     'phone' => $data['phone'],
                     'cpf' => $cpf ?: $address->cpf,

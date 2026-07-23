@@ -20,6 +20,7 @@ class CheckoutRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'label'          => 'nullable|string|max:50',
             'recipient_name' => 'required|string|max:255',
             'phone'          => 'required|string|max:20',
             'street'         => 'required|string|max:255',
@@ -46,6 +47,9 @@ class CheckoutRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'label.string'          => 'O nome do endereço deve ser um texto.',
+            'label.max'             => 'O nome do endereço não pode ter mais de 50 caracteres.',
+
             'recipient_name.required' => 'Informe o nome do destinatário.',
             'phone.required'          => 'Informe o telefone.',
             'street.required'         => 'Informe a rua.',
@@ -74,6 +78,7 @@ class CheckoutRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'label'          => 'nome do endereço',
             'recipient_name' => 'nome do destinatário',
             'phone'          => 'telefone',
             'street'         => 'rua',
