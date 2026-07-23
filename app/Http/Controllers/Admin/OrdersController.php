@@ -22,6 +22,7 @@ class OrdersController extends Controller
             'user',
             'items',
             'items.variant.product',
+            'items.variant.product.images',
             'address'
         ]);
 

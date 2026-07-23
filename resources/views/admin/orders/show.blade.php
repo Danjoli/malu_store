@@ -74,14 +74,32 @@
 
         @foreach($order->items as $item)
 
+        @php
+            $product = $item->variant?->product;
+            $image = $product?->images?->first();
+        @endphp
+
         <div class="flex justify-between border-b pb-3">
 
             <div class="flex items-center gap-4">
 
-                <img
-                    src="{{ asset('storage/products/' . $product->images->first()->image) }}"
-                    class="w-14 h-14 object-cover rounded"
-                >
+                @if($image)
+
+                    <img
+                        src="{{ asset('storage/products/' . $image->image) }}"
+                        alt="{{ $item->name_snapshot }}"
+                        class="w-14 h-14 object-cover rounded"
+                    >
+
+                @else
+
+                    <div class="w-14 h-14 bg-gray-200 rounded flex items-center justify-center">
+                        <span class="text-xs text-gray-500">
+                            Sem imagem
+                        </span>
+                    </div>
+
+                @endif
 
                 <div>
 
