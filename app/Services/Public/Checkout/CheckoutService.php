@@ -216,7 +216,7 @@ class CheckoutService
                         | Aqui o complemento é salvo corretamente.
                         */
 
-                        'complement' => 'complement',
+                        'complement' => $data['complement'] ?? null,
 
                         'neighborhood' => $data['neighborhood'],
                         'city' => $data['city'],
