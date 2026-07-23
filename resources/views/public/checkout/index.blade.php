@@ -120,7 +120,7 @@
                     name="label"
                     value="{{ old('label', $address->label ?? '') }}"
                     class="w-full border rounded-lg px-4 py-2"
-                    placeholder="Ex: Casa, Trabalho"
+                    placeholder="Ex: Casa, Trabalho (opcional)"
                 >
             </div>
 
