@@ -53,7 +53,7 @@ class CheckoutService
 
             /*
             |--------------------------------------------------------------------------
-            | NORMALIZAÇÃO
+            | NORMALIZAÇÃO DOS DADOS
             |--------------------------------------------------------------------------
             */
 
@@ -73,7 +73,21 @@ class CheckoutService
                 trim($data['state'] ?? '')
             );
 
-            $complement = $data['complement'] ?? null;
+            /*
+            | Normaliza o complemento.
+            |
+            | Se o usuário deixar vazio, salva como NULL.
+            | Caso contrário, salva o texto informado.
+            |
+            */
+
+            $complement = trim(
+                $data['complement'] ?? ''
+            );
+
+            $complement = $complement !== ''
+                ? $complement
+                : null;
 
             /*
             |--------------------------------------------------------------------------
@@ -83,34 +97,75 @@ class CheckoutService
 
             $addressId = $data['address_id'] ?? null;
 
+            /*
+            |--------------------------------------------------------------------------
+            | ENDEREÇO EXISTENTE SELECIONADO
+            |--------------------------------------------------------------------------
+            */
+
             if ($addressId) {
 
                 /*
-                |--------------------------------------------------------------------------
-                | ENDEREÇO EXISTENTE
-                |--------------------------------------------------------------------------
-                |
-                | Garante que o endereço selecionado pertence
-                | ao usuário autenticado.
-                |
+                | Garante que o endereço pertence ao usuário autenticado.
                 */
 
                 $address = Address::where('user_id', $user->id)
                     ->findOrFail($addressId);
 
                 /*
-                | Usa o CPF informado no checkout.
-                | Caso não seja informado, mantém o CPF salvo no endereço.
+                |--------------------------------------------------------------------------
+                | ATUALIZA DADOS DO ENDEREÇO
+                |--------------------------------------------------------------------------
+                |
+                | O checkout permite alterar os dados do endereço.
+                | Por isso, atualizamos o endereço selecionado com os
+                | dados enviados pelo formulário.
+                |
+                */
+
+                $address->update([
+                    'recipient_name' => $data['recipient_name'],
+                    'phone' => $data['phone'],
+                    'cpf' => $cpf ?: $address->cpf,
+                    'street' => $data['street'],
+                    'number' => $data['number'],
+                    'complement' => $complement,
+                    'neighborhood' => $data['neighborhood'],
+                    'city' => $data['city'],
+                    'state' => $state,
+                    'cep' => $cep,
+                ]);
+
+                /*
+                | Atualiza o objeto em memória para garantir
+                | que os dados mais recentes sejam utilizados
+                | na criação do pedido.
+                */
+
+                $address->refresh();
+
+                /*
+                | Usa o CPF informado ou mantém o CPF anterior.
                 */
 
                 $cpf = $cpf ?: $address->cpf;
+            }
 
-            } else {
+            /*
+            |--------------------------------------------------------------------------
+            | NOVO ENDEREÇO
+            |--------------------------------------------------------------------------
+            */
+
+            else {
 
                 /*
                 |--------------------------------------------------------------------------
-                | PROCURA ENDEREÇO EXISTENTE
+                | PROCURA ENDEREÇO IGUAL
                 |--------------------------------------------------------------------------
+                |
+                | Verifica se o usuário já possui exatamente esse endereço.
+                |
                 */
 
                 $address = Address::where('user_id', $user->id)
@@ -124,11 +179,17 @@ class CheckoutService
                     ->where('cep', $cep)
                     ->where(function ($query) use ($complement) {
 
-                        if (empty($complement)) {
+                        if ($complement === null) {
+
                             $query->whereNull('complement')
                                 ->orWhere('complement', '');
+
                         } else {
-                            $query->where('complement', $complement);
+
+                            $query->where(
+                                'complement',
+                                $complement
+                            );
                         }
 
                     })
@@ -147,27 +208,35 @@ class CheckoutService
                         'label' => $data['label'] ?? null,
                         'recipient_name' => $data['recipient_name'],
                         'phone' => $data['phone'],
+                        'cpf' => $cpf,
                         'street' => $data['street'],
                         'number' => $data['number'],
-                        'complement' => $data['complement'] ?? null,
+
+                        /*
+                        | Aqui o complemento é salvo corretamente.
+                        */
+
+                        'complement' => $complement,
+
                         'neighborhood' => $data['neighborhood'],
                         'city' => $data['city'],
                         'state' => $state,
                         'cep' => $cep,
-                        'cpf' => $cpf,
                         'is_default' => !empty($data['is_default']),
                     ]);
 
-                } else {
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | ENDEREÇO JÁ EXISTENTE
+                |--------------------------------------------------------------------------
+                */
+
+                else {
 
                     /*
-                    |--------------------------------------------------------------------------
-                    | ENDEREÇO ENCONTRADO
-                    |--------------------------------------------------------------------------
-                    |
-                    | Caso o endereço já exista, utiliza o CPF informado
-                    | no checkout ou o CPF salvo no endereço.
-                    |
+                    | Usa o CPF informado ou o CPF já salvo.
                     */
 
                     $cpf = $cpf ?: $address->cpf;
@@ -191,8 +260,10 @@ class CheckoutService
             | CRIA PEDIDO
             |--------------------------------------------------------------------------
             |
-            | O pedido armazena um snapshot do endereço utilizado.
-            | Não usamos address_id porque o seu Order não possui essa coluna.
+            | O pedido salva um snapshot dos dados do endereço.
+            |
+            | Não usamos address_id porque a tabela orders
+            | não possui essa coluna.
             |
             */
 
@@ -204,7 +275,14 @@ class CheckoutService
                 'cpf' => $cpf,
                 'street' => $address->street,
                 'number' => $address->number,
+
+                /*
+                | O complemento vem diretamente do endereço
+                | atualizado/criado acima.
+                */
+
                 'complement' => $address->complement,
+
                 'neighborhood' => $address->neighborhood,
                 'city' => $address->city,
                 'state' => $address->state,
@@ -249,6 +327,12 @@ class CheckoutService
                 'service_id' => $data['service'],
                 'status' => 'pending',
             ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | RETORNA PEDIDO
+            |--------------------------------------------------------------------------
+            */
 
             return $order;
         });
