@@ -25,7 +25,7 @@
         <p class="text-sm text-gray-600">
             {{ $address->street }}, {{ $address->number }}
         </p>
-
+{{-- asdf --}}
         <p class="text-sm text-gray-600">
             {{ $address->neighborhood }}
         </p>
