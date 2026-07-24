@@ -45,4 +45,13 @@ class WebhookController extends Controller
             'status' => 'ok'
         ]);
     }
+
+    public function debugAsaas(Request $request)
+    {
+        return response()->json([
+            'token_recebido' => $request->header('asaas-access-token'),
+            'token_configurado' => config('services.asaas.webhook_token'),
+            'sao_iguais' => $request->header('asaas-access-token') === config('services.asaas.webhook_token'),
+        ]);
+    }
 }

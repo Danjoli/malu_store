@@ -16,4 +16,6 @@ Route::post('/webhooks/asaas', [WebhookController::class, 'asaas'])
 Route::post('/webhooks/melhor-envio', [WebhookController::class, 'melhorEnvio'])
     ->name('api.webhooks.melhor-envio');
 
+Route::get('/debug-asaas', [WebhookController::class, 'debugAsaas']);
+
 
