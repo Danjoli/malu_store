@@ -29,13 +29,13 @@ class WebhookController extends Controller
 
     public function asaas(Request $request)
     {
-        // $token = $request->header('asaas-access-token');
+        $token = $request->header('asaas-access-token');
 
-        // if ($token !== config('services.asaas.webhook_token')) {
-        //     return response()->json([
-        //         'message' => 'Unauthorized'
-        //     ], 401);
-        // }
+        if ($token !== config('services.asaas.webhook_token')) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
 
         $this->asaasWebhookService->handleAsaas(
             $request->all()
@@ -43,15 +43,6 @@ class WebhookController extends Controller
 
         return response()->json([
             'status' => 'ok'
-        ]);
-    }
-
-    public function debugAsaas(Request $request)
-    {
-        return response()->json([
-            'token_recebido' => $request->header('asaas-access-token'),
-            'token_configurado' => config('services.asaas.webhook_token'),
-            'sao_iguais' => $request->header('asaas-access-token') === config('services.asaas.webhook_token'),
         ]);
     }
 }
