@@ -76,7 +76,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (Throwable $e, Request $request) {
 
-            if (app()->environment('production')) {
+            if (!config('app.debug')) {
                 return response()->view('errors.500', [], 500);
             }
 

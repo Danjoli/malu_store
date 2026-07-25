@@ -13,6 +13,22 @@ use App\Http\Controllers\Admin\ShipmentController;
 
 /*
 |--------------------------------------------------------------------------
+| LOGIN ADMIN
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/login', [AdminAuthController::class,'showLogin'])
+        ->name('login');
+
+    Route::post('/login', [AdminAuthController::class,'login'])
+        ->name('login.submit');
+
+});
+
+/*
+|--------------------------------------------------------------------------
 | ÁREA ADMINISTRATIVA
 |--------------------------------------------------------------------------
 */
