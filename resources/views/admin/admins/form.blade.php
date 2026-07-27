@@ -33,10 +33,10 @@
 <div>
     <label class="block mb-1 font-semibold">Cargo</label>
     <select name="role" class="w-full border p-2 rounded">
-        @foreach($roles as $role)
-            <option value="{{ $role }}"
-                {{ old('role', $admin->role ?? 'admin') == $role ? 'selected' : '' }}>
-                {{ ucfirst($role) }}
+        @foreach($roles as $value => $label)
+            <option value="{{ $value  }}"
+                {{ old('role', $admin->role ?? 'admin') == $value ? 'selected' : '' }}>
+                {{ ucfirst($label) }}
             </option>
         @endforeach
     </select>
