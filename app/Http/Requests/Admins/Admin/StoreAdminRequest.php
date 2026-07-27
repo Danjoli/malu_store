@@ -31,7 +31,7 @@ class StoreAdminRequest extends FormRequest
             'role' => [
                 'required',
                 'string',
-                Rule::in(Admin::ROLES ?? []),
+                Rule::in(array_keys(Admin::ROLES)),
             ],
 
             'is_active' => ['nullable', 'boolean'],
