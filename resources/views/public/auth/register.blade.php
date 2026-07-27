@@ -35,8 +35,7 @@
 
         <input type="email" name="email" placeholder="Email"
             value="{{ old('email') }}"
-            class="w-fu
-            ll border p-2 mb-4 rounded">
+            class="w-full border p-2 mb-4 rounded">
 
         <input type="text" name="phone" placeholder="Telefone (11999999999)"
             value="{{ old('phone') }}"
