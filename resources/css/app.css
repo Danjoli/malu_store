@@ -2,6 +2,10 @@
 
 @import 'tailwindcss';
 
+[x-cloak] {
+    display: none !important;
+}
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -25,7 +29,8 @@
 }
 
 @layer components {
-    .store-container { width: min(100% - 2rem, 76rem); margin-inline: auto; }
+    .store-container { width: calc(100% - clamp(2rem, 6vw, 8rem)); margin-inline: auto; }
+    .home-container { width: calc(100% - clamp(2rem, 6vw, 8rem)); max-width: none; }
     .store-title { font-family: var(--font-display); letter-spacing: -.035em; }
     .store-kicker { font-size: .6875rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
     .store-button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: .25rem; padding: .75rem 1.1rem; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; transition: .2s ease; }

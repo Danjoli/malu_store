@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\CatalogController;
+use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PublicProductController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
