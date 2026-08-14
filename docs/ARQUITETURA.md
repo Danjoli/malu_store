@@ -88,6 +88,18 @@ Componentes administrativos já criados em `resources/views/components/admin/`:
 
 As páginas de **Produtos** e **Categorias** já utilizam esses componentes. Novas telas devem seguir o mesmo critério: extrair um componente quando o mesmo bloco tiver uso real em mais de uma página, sem transformar conteúdo específico em componente desnecessário.
 
+## Páginas legais
+
+As páginas públicas abaixo usam o componente reutilizável `resources/views/components/legal/document.blade.php`, que centraliza o cabeçalho e a leitura do conteúdo:
+
+| Rota | View | Finalidade |
+|---|---|---|
+| `/policy` | `public/legal/policy.blade.php` | Política de troca e devolução. |
+| `/terms` | `public/legal/terms.blade.php` | Termos de uso da loja. |
+| `/privacy` | `public/legal/privacy.blade.php` | Política de privacidade. |
+
+Os links estão disponíveis no rodapé público. Antes da publicação comercial, os textos devem ser revisados e complementados com os dados cadastrais corretos da empresa e validação jurídica adequada à operação.
+
 ## Banco de dados
 
 Principais tabelas:
