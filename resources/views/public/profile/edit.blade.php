@@ -37,7 +37,7 @@
                 <x-public.profile.address-list :addresses="$addresses" />
 
                 <div class="mt-6">
-                    <x-public.profile.address-form />
+                <x-public.profile.address-form :can-add-address="$addresses->count() < 10" />
                 </div>
             </div>
         </div>
