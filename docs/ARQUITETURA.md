@@ -153,6 +153,12 @@ O modelo completo de tabelas, relações, snapshots, seeders, imagens e comandos
 
 ## Carrinho e favoritos
 
+## Perfil do cliente
+
+A página `/perfil` reúne os dados de conta, troca de senha e endereços. O topo apresenta um resumo com total de pedidos, favoritos e endereços, além de atalhos para pedidos e favoritos.
+
+Na página de um pedido, o endereço exibido é o snapshot salvo no próprio pedido. Assim, a alteração posterior do cadastro de endereço não muda o histórico da compra.
+
 ### Carrinho
 
 `CartService` encontra ou cria um carrinho ativo do usuário. Ao adicionar uma variante já existente, a quantidade é incrementada; caso contrário, um `cart_item` é criado com snapshots do produto.
